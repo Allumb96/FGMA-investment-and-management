@@ -86,6 +86,7 @@ button { font: inherit; cursor: pointer; touch-action: manipulation; }
 .login { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: clamp(24px, 4vw, 38px); box-shadow: var(--shadow); }
 .login h2 { font-family: var(--serif); font-weight: 600; font-size: 32px; line-height: 1.1; }
 .login .sub { color: var(--muted); font-size: 14.5px; margin: 8px 0 22px; }
+.rein { display: block; color: var(--muted); font-size: 12.5px; margin: 3px 0 0; letter-spacing: .01em; }
 .login label { display: block; font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); margin: 16px 0 6px; }
 .login input { width: 100%; height: 48px; padding: 0 14px; font: inherit; font-size: 16px; color: var(--ink); background: #fbfbfa; border: 1px solid #c9c9c2; border-radius: 4px; transition: border-color .2s ease, box-shadow .2s ease; }
 .login input:focus { outline: none; border-color: var(--green-2); box-shadow: 0 0 0 3px rgba(46, 98, 71, .16); }
@@ -2039,16 +2040,21 @@ body.home footer.site { display: none; }
     const apertiPrima = $$('#dashBody .acc.open > .acc-body').map((e) => e.id);
     const catal = catalogo(me);
     $('#whoName').textContent = me.nome;
-    const cl = me.clienti.map((c, i) => ({ c, p: pannello(c, 'k' + i + '-') }))
-      .sort((a, b) => b.p.versato - a.p.versato || a.c.nome.localeCompare(b.c.nome, 'it'));
+    const cl = me.clienti.map((c, i) => {
+      const p = pannello(c, 'k' + i + '-');
+      // in master il versato e' l'importo pieno di ogni operazione: il reinvestito si legge a parte
+      const vTot = Math.round(c.operazioni.reduce((s, o) => s + o.investito, 0) * 100) / 100;
+      const vRein = Math.round(c.operazioni.reduce((s, o) => s + (o.riporto || 0) + (o.dalRete || 0), 0) * 100) / 100;
+      return { c, p, vTot, vRein };
+    }).sort((a, b) => b.vTot - a.vTot || a.c.nome.localeCompare(b.c.nome, 'it'));
     const nInv = cl.reduce((s, x) => s + x.p.n, 0);
     const versato = cl.reduce((s, x) => s + x.p.versato, 0);
     const inMano = cl.reduce((s, x) => s + x.p.inMano, 0);
     const kpi = `<div class="kpis" data-reveal><div><span class="lbl">Clienti totali</span><b>${cl.length}</b><small class="sub">Con accesso all'area riservata</small></div><div><span class="lbl">Investimenti</span><b>${nInv}</b><small class="sub">Operazioni registrate</small></div><div><span class="lbl">Totale previsto</span><b>${eur(inMano)}</b><small class="sub">In mano ai clienti a fine operazioni</small></div></div>`;
-    const clienti = cl.map(({ c, p }, i) => { const del = BOZZA.elimina.includes(c.username); return `<article class="op acc cli${del ? ' da-eliminare' : ''}" data-reveal>
+    const clienti = cl.map(({ c, p, vTot, vRein }, i) => { const del = BOZZA.elimina.includes(c.username); return `<article class="op acc cli${del ? ' da-eliminare' : ''}" data-reveal>
       <button type="button" class="acc-head" aria-expanded="false" aria-controls="acc-cli${i}">
         <div class="op-head"><div><h2 class="con-stella">${stella(c.livello)}${esc(c.nome)}</h2><p class="desc">@${esc(c.username)} · ${esc(LIV[c.livello] || LIV.bronzo)}${c.referente ? ' · referente: ' + esc(c.referente) : ''}</p></div><span class="pill"><i></i>${del ? 'Eliminazione richiesta' : p.n + (p.n === 1 ? ' investimento' : ' investimenti')}</span></div>
-        <div class="mini-foot"><span>Versato <b>${eur(p.versato)}</b></span><span>Totale previsto <b>${eur(p.inMano)}</b></span></div>
+        <div class="mini-foot"><span>Versato <b>${eur(vTot)}</b></span>${vRein > 0 ? `<span>di cui reinvestiti <b>${eur(vRein)}</b></span>` : ''}<span>Totale previsto <b>${eur(p.inMano)}</b></span></div>
         <span class="apri"><span class="apri-t">Mostra i dettagli</span> <i aria-hidden="true">›</i></span>
       </button>
       <div class="acc-body" id="acc-cli${i}" role="region" aria-label="Dettagli di ${esc(c.nome)}"><div class="acc-in"><div class="acc-pad">
@@ -2097,11 +2103,11 @@ body.home footer.site { display: none; }
       return `<article class="op acc cli" data-reveal>
       <button type="button" class="acc-head" aria-expanded="false" aria-controls="acc-inv${i}">
         <div class="op-head"><div><h2>${esc(o.titolo)}</h2><p class="desc">${dataIt(o.inizio)} → ${dataIt(o.fine)} · ${pctRif}%</p></div><span class="pill ${STATO[o.stato][1]}"><i></i>${STATO[o.stato][0]}</span></div>
-        <div class="mini-foot"><span>${righe.length} ${righe.length === 1 ? 'cliente' : 'clienti'} · Investito <b>${eur(tot)}</b></span><span>Totale previsto <b>${eur(fine)}</b></span></div>
+        <div class="mini-foot"><span>${righe.length} ${righe.length === 1 ? 'cliente' : 'clienti'} · Versato <b>${eur(tot)}</b></span><span>Totale previsto <b>${eur(fine)}</b></span></div>
         <span class="apri"><span class="apri-t">Mostra i dettagli</span> <i aria-hidden="true">›</i></span>
       </button>
       <div class="acc-body" id="acc-inv${i}" role="region"><div class="acc-in"><div class="acc-pad">
-        <table class="tab"><thead><tr><th>Cliente</th><th>Capitale</th><th>Guadagno</th><th>Totale</th></tr></thead><tbody>${righe.map((r) => `<tr><td>${esc(r.nome)}</td><td>${eur(r.op.investito)}</td><td class="pos">+${eur(r.op.guadagnoPrevisto)}</td><td>${eur(r.op.totaleAllaFine)}</td></tr>`).join('')}</tbody></table>
+        <table class="tab"><thead><tr><th>Cliente</th><th>Versato</th><th>Guadagno</th><th>Totale</th></tr></thead><tbody>${righe.map((r) => { const re = Math.round(((r.op.riporto || 0) + (r.op.dalRete || 0)) * 100) / 100; return `<tr><td>${esc(r.nome)}</td><td>${eur(r.op.investito)}${re > 0 ? `<small class="rein">di cui ${eur(re)} reinvestiti</small>` : ''}</td><td class="pos">+${eur(r.op.guadagnoPrevisto)}</td><td>${eur(r.op.totaleAllaFine)}</td></tr>`; }).join('')}</tbody></table>
       </div></div></div></article>`;
     }).join('');
     $('#dashBody').innerHTML = `
