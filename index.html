@@ -706,6 +706,11 @@ body.home footer.site { display: none; }
 #show .sh-tocca { left: 50%; transform: translateX(-50%); bottom: calc(76px + env(safe-area-inset-bottom, 0px)); padding: 12px 22px; font-size: 12.5px; border-color: rgba(226, 185, 85, .6); color: #f3e3bb; background: rgba(8, 4, 3, .6); box-shadow: 0 10px 30px -12px rgba(0, 0, 0, .9); }
 #show.film.muto .sh-tocca { animation: sh-battito 2.6s ease-in-out .8s infinite; }
 @keyframes sh-battito { 0%, 100% { box-shadow: 0 10px 30px -12px rgba(0, 0, 0, .9), 0 0 0 0 rgba(226, 185, 85, .35); } 50% { box-shadow: 0 10px 30px -12px rgba(0, 0, 0, .9), 0 0 0 10px rgba(226, 185, 85, 0); } }
+#show .sh-entra { margin: 26px 0 0; padding: 13px 34px 12px; border-radius: 2px; border: 0; cursor: pointer; opacity: 0; transform: translateY(6px); transition: opacity .6s ease, transform .6s ease; font-family: 'Cinzel', var(--serif); font-weight: 600; font-size: clamp(11px, 1.4vw, 13px); letter-spacing: .3em; text-transform: uppercase; color: #15100b; background: linear-gradient(180deg, #e9d6a2, #c9a15a); box-shadow: 0 14px 34px -14px rgba(201, 161, 90, .75); }
+#show .sh-entra:hover { transform: translateY(4px); }
+#show.pronto .sh-entra { opacity: 1; transform: none; }
+#show.film .sh-entra, #show.esci .sh-entra { opacity: 0; pointer-events: none; }
+#show.film .sh-in { opacity: 0; transition: opacity .5s ease; }
 #show.film .sh-salta { opacity: 1; }
 #show.film.muto .sh-tocca { opacity: 1; }
 #show.esci .sh-salta, #show.esci .sh-tocca { opacity: 0 !important; }
@@ -727,7 +732,7 @@ body.home footer.site { display: none; }
 </style>
 <body class="home">
 
-  <div id="show" class="on" aria-hidden="true"><video class="sh-video" id="showVid" playsinline preload="none" aria-hidden="true"></video><i class="sh-vel" aria-hidden="true"></i><div class="sh-in"><div class="sh-logo"></div><i class="sh-riga"></i><p class="sh-nome">FGMA Investment &amp; Management</p><p class="sh-sub"></p></div><button type="button" class="sh-tocca"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.2L12 5.6v12.8l-4.8-3.9H4z" fill="currentColor" stroke="none"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.6a7.6 7.6 0 0 1 0 10.8"/></svg>Tocca per l'audio</button><button type="button" class="sh-salta">Salta</button></div>
+  <div id="show" class="on" aria-hidden="true"><video class="sh-video" id="showVid" playsinline preload="none" aria-hidden="true"></video><i class="sh-vel" aria-hidden="true"></i><div class="sh-in"><div class="sh-logo"></div><i class="sh-riga"></i><p class="sh-nome">FGMA Investment &amp; Management</p><p class="sh-sub"></p><button type="button" class="sh-entra">Entra</button></div><button type="button" class="sh-tocca"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.2L12 5.6v12.8l-4.8-3.9H4z" fill="currentColor" stroke="none"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.6a7.6 7.6 0 0 1 0 10.8"/></svg>Tocca per l'audio</button><button type="button" class="sh-salta">Salta</button></div>
 <div class="bgfix" aria-hidden="true"></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
 <div id="cinema" hidden aria-hidden="true"></div>
@@ -1456,12 +1461,12 @@ body.home footer.site { display: none; }
 (function () {
   // due riprese: orizzontale (schermi larghi) e verticale (cellulare), stessa logica
   const SET = {
-    h: { dir: 'film', N: 195, FPS: 15, tavolo: 5.9,
-      ANCORE: [['chi-siamo', 2.4], ['metodo', 3.8], ['termini', 5.8], ['come-funziona', 8.3], ['aree', 9.8], ['contatti', 11.6]],
-      SUONI: [[2.25, 'porta'], [5.1, 'tavolo'], [8.0, 'lavagna']], DENTRO: [2.6, 10.2] },
-    v: { dir: 'film-v', N: 106, FPS: 15, tavolo: 4.2,
-      ANCORE: [['chi-siamo', 1.6], ['metodo', 2.4], ['termini', 3.2], ['come-funziona', 4.1], ['aree', 5.0], ['contatti', 6.4]],
-      SUONI: [[1.4, 'porta'], [3.7, 'tavolo']], DENTRO: [1.7, 5.9] },
+    h: { dir: 'film', N: 196, FPS: 13, tavolo: 10.5,
+      ANCORE: [['chi-siamo', 2.6], ['metodo', 4.5], ['termini', 6.5], ['come-funziona', 8.5], ['aree', 10.5], ['contatti', 13]],
+      SUONI: [], DENTRO: [7, 15] },
+    v: { dir: 'film-v', N: 120, FPS: 8, tavolo: 10,
+      ANCORE: [['chi-siamo', 2], ['metodo', 4], ['termini', 6], ['come-funziona', 8], ['aree', 10], ['contatti', 12.5]],
+      SUONI: [], DENTRO: [6, 14.8] },
   };
   const verticale = () => innerWidth < innerHeight * 0.95;
   let S = SET.h, FPS = S.FPS, N = S.N, DUR = (N - 1) / FPS, ANCORE = S.ANCORE, SUONI = S.SUONI, DENTRO = S.DENTRO;
@@ -2083,9 +2088,14 @@ body.home footer.site { display: none; }
       const { o, righe } = gr[k];
       const tot = righe.reduce((s, r) => s + r.op.investito, 0);
       const fine = righe.reduce((s, r) => s + r.op.totaleAllaFine, 0);
+      // in testa va la percentuale normale dell'operazione (quella della maggior parte dei clienti):
+      // i casi particolari restano scritti nella riga del singolo cliente
+      const quante = {};
+      righe.forEach((r) => { quante[r.op.rendimentoPct] = (quante[r.op.rendimentoPct] || 0) + 1; });
+      const pctRif = Object.keys(quante).map(Number).sort((x, y) => (quante[y] - quante[x]) || (y - x))[0];
       return `<article class="op acc cli" data-reveal>
       <button type="button" class="acc-head" aria-expanded="false" aria-controls="acc-inv${i}">
-        <div class="op-head"><div><h2>${esc(o.titolo)}</h2><p class="desc">${dataIt(o.inizio)} → ${dataIt(o.fine)} · ${o.rendimentoPct}%</p></div><span class="pill ${STATO[o.stato][1]}"><i></i>${STATO[o.stato][0]}</span></div>
+        <div class="op-head"><div><h2>${esc(o.titolo)}</h2><p class="desc">${dataIt(o.inizio)} → ${dataIt(o.fine)} · ${pctRif}%</p></div><span class="pill ${STATO[o.stato][1]}"><i></i>${STATO[o.stato][0]}</span></div>
         <div class="mini-foot"><span>${righe.length} ${righe.length === 1 ? 'cliente' : 'clienti'} · Investito <b>${eur(tot)}</b></span><span>Totale previsto <b>${eur(fine)}</b></span></div>
         <span class="apri"><span class="apri-t">Mostra i dettagli</span> <i aria-hidden="true">›</i></span>
       </button>
@@ -2343,6 +2353,7 @@ body.home footer.site { display: none; }
     const calmo = () => !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
     // sul cellulare (schermo stretto o in piedi) va la ripresa verticale, altrimenti quella larga
     const verticale = () => innerWidth <= 760 || innerWidth < innerHeight * 0.95;
+    const FERMA = 5.0; // l'auto e' arrivata in inquadratura: da qui in poi comanda lo scorrimento
     let attese = [];
     const aspetta = (ms) => new Promise((ok) => { const t = setTimeout(ok, ms); attese.push(() => { clearTimeout(t); ok(); }); });
     const salta = () => { const a = attese; attese = []; a.forEach((f) => f()); };
@@ -2350,11 +2361,12 @@ body.home footer.site { display: none; }
     if (el) {
       const lk = $('.hero .lockup'); if (lk && !$('.sh-logo .lockup', el)) $('.sh-logo', el).appendChild(lk.cloneNode(true));
       vid = $('#showVid', el);
-      // durante il filmato il primo tocco accende l'audio: per saltare c'e' il pulsante
       el.addEventListener('click', (e) => {
-        const salta_ = e.target.closest && e.target.closest('.sh-salta');
-        if (!salta_ && inFilm && vid && vid.muted) { accendi(); return; }
-        salta();
+        const t = e.target.closest ? e.target : null;
+        if (t && t.closest('.sh-entra')) return;              // ci pensa il suo gestore
+        if (t && t.closest('.sh-salta')) { salta(); return; }
+        if (inFilm && vid && vid.muted) { accendi(); return; } // il primo tocco accende l'audio
+        if (!inFilm) salta();
       });
       addEventListener('keydown', (e) => { if (el.classList.contains('on') && (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter')) salta(); });
     }
@@ -2367,11 +2379,10 @@ body.home footer.site { display: none; }
       el.classList.remove('on');
       if (vid) { try { vid.pause(); } catch (x) { /* niente */ } }
       await new Promise((ok) => setTimeout(ok, 650));
-      el.classList.remove('titolo', 'esci', 'film', 'muto'); $('.sh-sub', el).textContent = '';
+      el.classList.remove('titolo', 'esci', 'film', 'muto', 'pronto'); $('.sh-sub', el).textContent = '';
       if (vid) { vid.removeAttribute('src'); try { vid.load(); } catch (x) { /* niente */ } }
     };
-    // il filmato d'arrivo alla villa, col suo audio. Se il browser non lo lascia partire col suono,
-    // parte muto e basta un tocco per accenderlo. Se non parte affatto, resta l'apertura col logo.
+    // l'arrivo dell'auto, col suo audio: parte dal tocco su Entra e si ferma dove comincia lo scorrimento
     function filmato() {
       return new Promise((fine) => {
         if (!vid || !vid.canPlayType || !vid.canPlayType('video/mp4')) { fine(false); return; }
@@ -2380,13 +2391,13 @@ body.home footer.site { display: none; }
           if (chiuso) return; chiuso = true; inFilm = false;
           clearTimeout(attesa);
           vid.removeEventListener('ended', suFine); vid.removeEventListener('error', suErr); vid.removeEventListener('timeupdate', suTempo);
-          if (!ok) { try { vid.pause(); } catch (x) { /* niente */ } el.classList.remove('film', 'muto'); }
+          try { vid.pause(); } catch (x) { /* niente */ }
+          if (!ok) el.classList.remove('film', 'muto');
           fine(ok);
         };
         const suFine = () => esci(true);
         const suErr = () => esci(false);
-        // sul finale il logo compare sopra l'immagine
-        const suTempo = () => { if (vid.duration && vid.currentTime > vid.duration - 3.4) el.classList.add('titolo'); };
+        const suTempo = () => { if (vid.currentTime >= FERMA) esci(true); };
         const attesa = setTimeout(() => { if (!vid.currentTime) esci(false); }, 9000);
         attese.push(() => esci(true));
         vid.addEventListener('ended', suFine); vid.addEventListener('error', suErr); vid.addEventListener('timeupdate', suTempo);
@@ -2394,7 +2405,7 @@ body.home footer.site { display: none; }
         vid.poster = v ? 'media/show-v-poster.jpg' : 'media/show-poster.jpg';
         vid.preload = 'auto';
         vid.src = v ? 'media/show-v.mp4' : 'media/show.mp4';
-        el.classList.add('film');
+        el.classList.remove('titolo'); el.classList.add('film');
         inFilm = true; vid.volume = 1; vid.muted = false;
         const p = vid.play();
         if (p && p.catch) p.catch(() => {
@@ -2403,14 +2414,26 @@ body.home footer.site { display: none; }
         });
       });
     }
-    // apertura del sito: una volta per visita
+    // apertura del sito: nero col logo, si preme Entra e l'auto arriva. Una volta per visita.
     async function apertura() {
       if (!el) return;
       let visto = false; try { visto = sessionStorage.getItem('fgma-show') === '1'; } catch (x) { visto = false; }
       if (visto || calmo()) { el.classList.add('subito'); el.classList.remove('on'); setTimeout(() => el.classList.remove('subito'), 50); return; }
       try { sessionStorage.setItem('fgma-show', '1'); } catch (x) { /* ignora */ }
-      const andato = await filmato();
-      if (!andato) { await aspetta(450); el.classList.add('titolo'); await aspetta(2700); }
+      await aspetta(450);
+      el.classList.add('titolo');
+      await aspetta(1700);
+      el.classList.add('pronto');
+      // si aspetta Entra: chi preferisce saltare entra subito, senza filmato
+      let entra = false;
+      await new Promise((ok) => {
+        const b = $('.sh-entra', el);
+        const via = () => { b && b.removeEventListener('click', su); ok(); };
+        const su = () => { entra = true; via(); };
+        if (b) b.addEventListener('click', su);
+        attese.push(via);
+      });
+      if (entra) await filmato();
       el.classList.add('esci');
       await aspetta(500);
       chiudi();
@@ -2419,7 +2442,7 @@ body.home footer.site { display: none; }
     async function ingresso(me, entra, ripresa) {
       if (!el || calmo()) { entra(); return; }
       $('.sh-sub', el).textContent = 'Benvenuto, ' + me.nome;
-      el.classList.remove('titolo', 'esci', 'film', 'muto'); el.classList.add('on');
+      el.classList.remove('titolo', 'esci', 'film', 'muto', 'pronto'); el.classList.add('on');
       await aspetta(500);
       el.classList.add('titolo');
       await aspetta(2300);
