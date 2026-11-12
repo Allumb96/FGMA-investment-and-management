@@ -1,6 +1,8 @@
 /* Cruscotto dei conti: stessa lingua grafica delle schede, con i colori dei grafici verificati. */
 .conti .cruscotto {margin:0 0 3.5cqh;padding-bottom:3cqh;border-bottom:1px solid #c9a15a30}
 .conti .cruscotto .kpis {margin:0 0 3cqh;grid-template-columns:repeat(4,minmax(0,1fr))}
+/* nel master il riepilogo in cifre ha tre voci: niente buco nella griglia a due */
+.conti .master-conti>.kpis {grid-template-columns:repeat(3,minmax(0,1fr))}
 .conti .gr {margin:0;display:block}
 .conti .gr figcaption {font:600 1.9cqh/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#c9a15a;margin-bottom:1.4cqh}
 .conti .gr-and .tela {position:relative;width:100%}
@@ -40,6 +42,7 @@
 .conti .vuoto-g {margin:1.5cqh 0 0;color:#c4c1ba}
 @media (orientation:portrait) and (max-width:820px){
   .conti .cruscotto .kpis {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .conti .master-conti>.kpis {grid-template-columns:repeat(1,minmax(0,1fr))}
   .conti .torte {grid-template-columns:1fr;gap:3.2cqh}
   .conti .torta-riga svg {width:17cqw;height:17cqw}
   .conti .gr-and svg {aspect-ratio:100/42}

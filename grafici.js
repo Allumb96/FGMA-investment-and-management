@@ -119,6 +119,37 @@
     </section>`;
   }
 
+  /* ---- cruscotto del master: tutte le operazioni di tutti i clienti ---- */
+  function righeMaster(me) {
+    const v = [];
+    (me.clienti || []).forEach((c) => (c.operazioni || []).forEach((o) => v.push({ cliente: c.nome, o })));
+    return v;
+  }
+  function somma(righe, chiave, campo) {
+    const m = {};
+    righe.forEach((r) => { const k = chiave(r); m[k] = (m[k] || 0) + (+r.o[campo] || 0); });
+    return Object.entries(m);
+  }
+  function cruscottoMaster(me, parte) {
+    const righe = me ? righeMaster(me) : [];
+    if (!righe.length) return '';
+    if (parte === 'clienti') {
+      const perNome = (r) => r.cliente;
+      return `<section class="cruscotto"><div class="torte">
+        ${torta(raggruppa(somma(righe, perNome, 'investito'), 6, 'Altri clienti'), 'Capitale per cliente', 'Nessun capitale affidato')}
+        ${torta(raggruppa(somma(righe, perNome, 'guadagnoPrevisto'), 6, 'Altri clienti'), 'Guadagni previsti per cliente', 'Nessun guadagno previsto')}
+      </div></section>`;
+    }
+    const perTitolo = (r) => r.o.titolo;
+    return `<section class="cruscotto">
+      ${andamento({ operazioni: righe.map((r) => r.o), rete: [] })}
+      <div class="torte">
+        ${torta(raggruppa(somma(righe, perTitolo, 'investito'), 5, 'Altre operazioni'), 'Capitale per operazione', 'Nessun capitale impegnato')}
+        ${torta(raggruppa(somma(righe, perTitolo, 'guadagnoPrevisto'), 5, 'Altre operazioni'), 'Guadagni previsti per operazione', 'Nessun guadagno previsto')}
+      </div>
+    </section>`;
+  }
+
   /* il mirino legge i valori del giorno sotto il puntatore */
   function cabla(radice) {
     const tela = radice && radice.querySelector('.gr-and .tela');
@@ -149,5 +180,5 @@
     tela.addEventListener('pointercancel', via);
   }
 
-  window.GraficiFGMA = { cruscotto, cabla };
+  window.GraficiFGMA = { cruscotto, cruscottoMaster, cabla };
 })();

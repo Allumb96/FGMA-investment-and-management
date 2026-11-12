@@ -199,7 +199,7 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
       <p>Valori previsti alla chiusura della catena di reinvestimenti più lunga; non sono guadagni già incassati. Le operazioni parallele sono dettagliate sopra.</p>
       ${lavagnaHtml(me, p.ord)}</section>${p.reteHtml}${seguitiHtml(me)}${catalogoHtml(me)}` };
   };
-  function master(me) {
+  function master(me, parte) {
     const capitale = c => c.operazioni.reduce((s,o)=>s+o.investito,0);
     const clienti = me.clienti.map((c,i) => ({c, p:pannello(c, `master-${i}-`)}))
       .sort((a,b)=>capitale(b.c)-capitale(a.c)||a.c.nome.localeCompare(b.c.nome,'it'));
@@ -216,19 +216,25 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
       <div><span class="lbl">Da dare al cliente a scadenza (previsto)</span><b>${eur(o.totaleAllaFine)}</b></div></div>
       <p>${dataIt(o.inizio)} → ${dataIt(o.fine)} · ${STATO[o.stato][0]}</p>${o.descrizione?`<p>${esc(o.descrizione)}</p>`:''}`;
     const riga = (titolo, sotto, html) => `<details><summary><span class="riepilogo-titolo">${esc(titolo)}</span><span class="riepilogo-dettagli">${sotto}</span><span class="riepilogo-invito">Apri / chiudi dettagli</span></summary>${html}</details>`;
-    return `<div class="master-conti"><div class="kpis"><div><span class="lbl">Capitale complessivo delle operazioni</span><b>${eur(clienti.reduce((s,{c})=>s+capitale(c),0))}</b><small>Somma degli importi impiegati in tutte le operazioni, anche successive; non è il saldo attuale.</small></div>
+    const intestazione = `<div class="kpis"><div><span class="lbl">Capitale complessivo delle operazioni</span><b>${eur(clienti.reduce((s,{c})=>s+capitale(c),0))}</b><small>Somma degli importi impiegati in tutte le operazioni, anche successive; non è il saldo attuale.</small></div>
       <div><span class="lbl">Guadagni previsti dei clienti</span><b class="pos">${eur(somma('guadagni'))}</b></div>
       <div><span class="lbl">Totale previsto ai clienti</span><b>${eur(somma('inMano'))}</b></div></div>
-      <p>${clienti.length} clienti · ${somma('n')} operazioni</p><h3>Capitale per investimento</h3>
+      <p>${clienti.length} clienti · ${somma('n')} operazioni</p>`;
+    const perInvestimento = `<h3>Capitale per investimento</h3>
       ${Array.from(gruppi.values()).sort((a,b)=>rango(a.o)-rango(b.o)
         ||b.righe.reduce((s,r)=>s+r.o.investito,0)-a.righe.reduce((s,r)=>s+r.o.investito,0)
         ||a.o.inizio.localeCompare(b.o.inizio)).map(({o,righe})=>riga(o.titolo,
         `${eur(righe.reduce((s,r)=>s+r.o.investito,0))} impiegati · ${dataIt(o.inizio)} → ${dataIt(o.fine)}<span class="totale-clienti">Da dare ai clienti a scadenza: <strong>${eur(righe.reduce((s,r)=>s+Math.round(r.o.totaleAllaFine*100),0)/100)}</strong> <small>(capitale + guadagni previsti)</small></span>`,
         `<div class="kpis"><div><span class="lbl">Capitale da restituire</span><b>${eur(righe.reduce((s,r)=>s+Math.round(r.o.investito*100),0)/100)}</b></div><div><span class="lbl">Guadagni previsti da riconoscere</span><b class="pos">${eur(righe.reduce((s,r)=>s+Math.round(r.o.guadagnoPrevisto*100),0)/100)}</b></div></div><p>Clienti ordinati per capitale nell'operazione, dal più alto al più basso.</p>`+
-        righe.sort((a,b)=>b.o.investito-a.o.investito||a.nome.localeCompare(b.nome,'it')).map(r=>riga(r.nome,`${eur(r.o.investito)} nell'operazione`,dettaglio(r.o))).join(''))).join('')}
-      <h3>Tutti i clienti · ${clienti.length}</h3>
+        righe.sort((a,b)=>b.o.investito-a.o.investito||a.nome.localeCompare(b.nome,'it')).map(r=>riga(r.nome,`${eur(r.o.investito)} nell'operazione`,dettaglio(r.o))).join(''))).join('')}`;
+    const tuttiIClienti = `<h3>Scheda di ogni cliente · ${clienti.length}</h3>
       ${clienti.map(({c})=>riga(c.nome,`${eur(capitale(c))} complessivi nelle operazioni · ${c.operazioni.length} operazioni`,
-        c.operazioni.slice().sort(perLettura).map(o=>riga(o.titolo,`${eur(o.investito)} nell'operazione`,dettaglio(o))).join('')||'<p>Nessuna operazione registrata.</p>')).join('')}${catalogoHtml(me)}</div>`;
+        c.operazioni.slice().sort(perLettura).map(o=>riga(o.titolo,`${eur(o.investito)} nell'operazione`,dettaglio(o))).join('')||'<p>Nessuna operazione registrata.</p>')).join('')}`;
+    // le due schermate della sala mostrano due tagli diversi degli stessi dati
+    const corpo = parte === 'clienti' ? tuttiIClienti
+      : parte === 'investimenti' ? perInvestimento + catalogoHtml(me)
+      : perInvestimento + tuttiIClienti + catalogoHtml(me);
+    return `<div class="master-conti">${intestazione}${corpo}</div>`;
   }
   window.VisteFGMA = {
     // Exposed pure renderer also allows regression checks against the original portal.
@@ -236,12 +242,12 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
     investimenti(me) {
       if (!me) return '<p>Accedi per consultare i tuoi investimenti.</p>';
       const m=copia(me);
-      return m.ruolo==='master' ? master(m) : schedaCliente(m,'cliente-').html;
+      return m.ruolo==='master' ? master(m,'investimenti') : schedaCliente(m,'cliente-').html;
     },
     clienti(me) {
       if (!me) return '<p>Accedi per consultare i tuoi clienti.</p>';
       const m=copia(me);
-      if(m.ruolo==='master') return master(m);
+      if(m.ruolo==='master') return master(m,'clienti');
       const p=pannello(m,'rete-');
       return `${p.reteHtml || '<p>Nessuna quota della rete registrata.</p>'}${seguitiHtml(m)}`;
     }

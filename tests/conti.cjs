@@ -35,7 +35,7 @@ const newcomer=person([op(1500,10,'2026-02-01','2026-03-01')]);newcomer.nome='Nu
 const ordered=views.investimenti({ruolo:'master',nome:'Master',clienti:[newcomer,reinvestor],investimenti:[]});
 const group=ordered.split('2 febbraio')[0];
 const pos=ordered.indexOf('3.500');
-assert(pos>=0);const second=ordered.slice(pos,ordered.indexOf('Tutti i clienti'));
+assert(pos>=0);const second=ordered.slice(pos);
 assert(second.indexOf('Reinvestitore')<second.indexOf('Nuovo cliente'),'reinvested 2000 must precede fresh 1500');
 assert(second.includes('2.000'));assert(!ordered.includes('Aggiunta / prelievo'));
 console.log('PASS: master sorts by full operation capital including reinvested gains');
@@ -43,3 +43,8 @@ console.log('PASS: master sorts by full operation capital including reinvested g
 assert(ordered.includes('Da dare ai clienti a scadenza: <strong>3.850'),'operation payout must include 3500 capital plus 350 gains');
 assert(ordered.includes('Capitale da restituire'));assert(ordered.includes('Guadagni previsti da riconoscere'));
 console.log('PASS: operation payout equals capital plus each client gain');
+
+const soloClienti=views.clienti({ruolo:'master',nome:'Master',clienti:[newcomer,reinvestor],investimenti:[]});
+assert(soloClienti.includes('Scheda di ogni cliente')&&!soloClienti.includes('Capitale per investimento'),'clients screen lists clients only');
+assert(ordered.includes('Capitale per investimento')&&!ordered.includes('Scheda di ogni cliente'),'investments screen groups by operation only');
+console.log('PASS: master splits the two room screens');

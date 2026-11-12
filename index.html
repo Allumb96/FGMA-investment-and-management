@@ -11,8 +11,9 @@
 <meta property="og:description" content="Entra nella villa: il nostro metodo, i termini e l'area riservata ai clienti.">
 <meta property="og:image" content="img/riposo-scrivania.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=2">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=3">
+<link rel="icon" href="favicon.ico?v=3" sizes="any">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Instrument+Sans:wght@400;500;600&display=swap">
@@ -21,10 +22,10 @@
 </head>
 <body>
 <script src="dati.js"></script>
-<script src="viste-clienti.js?v=20261112-ordine-1"></script>
-<script src="grafici.js?v=20261112-grafici-1"></script>
+<script src="viste-clienti.js?v=20261112-master-s1"></script>
+<script src="grafici.js?v=20261112-master-g1"></script>
 <link rel="stylesheet" href="conti.css?v=20261112-master-4">
-<link rel="stylesheet" href="grafici.css?v=20261112-grafici-1">
+<link rel="stylesheet" href="grafici.css?v=20261112-master-g1">
 <style>
 :root{
   color-scheme:dark;
@@ -905,10 +906,26 @@ function HNOVITA(){
 }
 let contoCorrente = null;
 function HINVESTIMENTI(){
-  return `<div class="inv conti"><div class="cima"><h2>${escapeConti(T.cliente.nome||'Area riservata')}</h2><small>${escapeConti(T.cliente.livello||'')}</small></div>${window.GraficiFGMA?GraficiFGMA.cruscotto(contoCorrente):''}${VisteFGMA.investimenti(contoCorrente)}</div>`;
+  return `<div class="inv conti"><div class="cima"><h2>${escapeConti(T.cliente.nome||'Area riservata')}</h2><small>${escapeConti(T.cliente.livello||'')}</small></div>${GRAFICI('investimenti')}${VisteFGMA.investimenti(contoCorrente)}</div>`;
+}
+/* nel master i grafici vanno letti dopo il riepilogo in cifre, non prima */
+function SISTEMA(radice){
+  if(!radice) return;
+  const gr=radice.querySelector('.cruscotto'), kp=radice.querySelector('.master-conti .kpis');
+  if(gr&&kp){
+    const dopo=(kp.nextElementSibling&&kp.nextElementSibling.tagName==='P')?kp.nextElementSibling:kp;
+    dopo.parentNode.insertBefore(gr, dopo.nextSibling);
+  }
+  window.GraficiFGMA&&GraficiFGMA.cabla(radice);
+}
+function GRAFICI(parte){
+  if(!window.GraficiFGMA||!contoCorrente) return '';
+  return contoCorrente.ruolo==='master'
+    ? GraficiFGMA.cruscottoMaster(contoCorrente, parte)
+    : (parte==='investimenti' ? GraficiFGMA.cruscotto(contoCorrente) : '');
 }
 function HCLIENTI(){
-  return `<div class="inv conti"><div class="cima"><h2>${contoCorrente?.ruolo==='master'?'Tutti i clienti':'I tuoi clienti'}</h2></div>${VisteFGMA.clienti(contoCorrente)}</div>`;
+  return `<div class="inv conti"><div class="cima"><h2>${contoCorrente?.ruolo==='master'?'Tutti i clienti':'I tuoi clienti'}</h2></div>${GRAFICI('clienti')}${VisteFGMA.clienti(contoCorrente)}</div>`;
 }
 function escapeConti(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function HTARGA(){
@@ -1704,10 +1721,10 @@ function costruisci(){
   TASTI['fogli']=e=>{ if(e.key==='ArrowDown') sc3.vai(1); if(e.key==='ArrowUp') sc3.vai(-1); };
 
   /* ---- lavagna in vetro: gli investimenti ---- */
-  const ss=superficie('novita', HINVESTIMENTI()); window.GraficiFGMA&&GraficiFGMA.cabla(ss);
+  const ss=superficie('novita', HINVESTIMENTI()); SISTEMA(ss);
 
   /* ---- schermo a parete: i clienti che hai portato ---- */
-  superficie('schermo', HCLIENTI());
+  SISTEMA(superficie('schermo', HCLIENTI()));
 
   /* ---- targa sulla porta della sala ---- */
   const starga=superficie('targa', HTARGA(), 'piana');
@@ -1717,8 +1734,8 @@ function costruisci(){
     sn.innerHTML=HNOVITA(); sc3=trascina($('.finestra',sn), $('.pista',sn));
     AVVIA['fogli']=()=>setTimeout(sc3.inizio,30);
     TASTI['fogli']=e=>{ if(e.key==='ArrowDown') sc3.vai(1); if(e.key==='ArrowUp') sc3.vai(-1); };
-    ss.innerHTML=HINVESTIMENTI(); window.GraficiFGMA&&GraficiFGMA.cabla(ss);
-    $('#s-schermo').innerHTML=HCLIENTI();
+    ss.innerHTML=HINVESTIMENTI(); SISTEMA(ss);
+    const sc=$('#s-schermo'); sc.innerHTML=HCLIENTI(); SISTEMA(sc);
     starga.innerHTML=HTARGA();
     const AN2=ANTEPRIME();
     for (const k of ['novita','schermo','fogli']){
