@@ -1,0 +1,124 @@
+{
+ "parte1-scrivania": {
+  "fps": 30,
+  "fotogrammi": 900,
+  "secondi": 30.0,
+  "tagli": [
+   {
+    "clip": "chi-siamo",
+    "da": 0,
+    "a": 89,
+    "secondi": [
+     0.0,
+     3.0
+    ]
+   },
+   {
+    "clip": "chi-siamo_r",
+    "da": 90,
+    "a": 179,
+    "secondi": [
+     3.0,
+     6.0
+    ]
+   },
+   {
+    "clip": "metodo",
+    "da": 180,
+    "a": 269,
+    "secondi": [
+     6.0,
+     9.0
+    ]
+   },
+   {
+    "clip": "metodo_r",
+    "da": 270,
+    "a": 359,
+    "secondi": [
+     9.0,
+     12.0
+    ]
+   },
+   {
+    "clip": "termini",
+    "da": 360,
+    "a": 449,
+    "secondi": [
+     12.0,
+     15.0
+    ]
+   },
+   {
+    "clip": "termini_r",
+    "da": 450,
+    "a": 539,
+    "secondi": [
+     15.0,
+     18.0
+    ]
+   },
+   {
+    "clip": "come-funziona",
+    "da": 540,
+    "a": 629,
+    "secondi": [
+     18.0,
+     21.0
+    ]
+   },
+   {
+    "clip": "come-funziona_r",
+    "da": 630,
+    "a": 719,
+    "secondi": [
+     21.0,
+     24.0
+    ]
+   },
+   {
+    "clip": "contatti",
+    "da": 720,
+    "a": 809,
+    "secondi": [
+     24.0,
+     27.0
+    ]
+   },
+   {
+    "clip": "contatti_r",
+    "da": 810,
+    "a": 899,
+    "secondi": [
+     27.0,
+     30.0
+    ]
+   }
+  ]
+ },
+ "clip2-clienti": {
+  "fps": 30,
+  "fotogrammi": 340,
+  "secondi": 11.33,
+  "tagli": [
+   {
+    "clip": "C",
+    "da": 0,
+    "a": 169,
+    "secondi": [
+     0.0,
+     5.667
+    ]
+   },
+   {
+    "clip": "C_r",
+    "da": 170,
+    "a": 339,
+    "secondi": [
+     5.667,
+     11.333
+    ]
+   }
+  ]
+ }
+}
