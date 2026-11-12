@@ -20,6 +20,7 @@
 <script>window.PORTALE_URL='portale.html';</script>
 </head>
 <body>
+<script src="dati.js"></script>
 <style>
 :root{
   color-scheme:dark;
@@ -31,6 +32,7 @@
   --caps:'Cinzel','Cormorant Garamond',Georgia,serif;
 }
 html,body{height:100%;background:var(--nero);color:var(--ink);overflow:hidden}
+[hidden]{display:none!important}
 body{margin:0;font-family:var(--sans);-webkit-font-smoothing:antialiased}
 #app{position:fixed;inset:0;background:var(--nero)}
 #stage{position:absolute;overflow:hidden;background:#000;user-select:none;-webkit-user-select:none}
@@ -77,7 +79,6 @@ img.fermo.on{opacity:1}
   padding:10px 18px 9px 21px;border-radius:2px;white-space:nowrap;transition:opacity .6s ease,transform .6s ease;
   backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 #avviso.on{opacity:1;transform:translate(-50%,0)}
-#nota-anteprima{position:absolute;left:1.6%;bottom:3.6%;z-index:20;font-family:var(--caps);font-size:clamp(9px,.95vw,11px);letter-spacing:.2em;text-transform:uppercase;color:rgba(233,214,162,.72);background:rgba(7,7,6,.45);border:1px solid rgba(201,161,90,.3);padding:5px 10px 4px 12px;border-radius:2px;pointer-events:none}
 
 /* ---------- citofono ---------- */
 .tasto{position:absolute;border-radius:50%;cursor:pointer;border:0;background:transparent;padding:0;outline:none}
@@ -135,10 +136,24 @@ img.fermo.on{opacity:1}
   border:1px solid rgba(201,161,90,.42);box-shadow:0 40px 110px -30px rgba(0,0,0,.9);
   transform:translateY(10px);transition:transform .7s cubic-bezier(.2,.7,.2,1)}
 #varco.on .scheda-varco{transform:translateY(0)}
-#varco-portale{font-family:var(--caps);font-size:clamp(10px,1vw,12px);letter-spacing:.18em;text-transform:uppercase;
-  color:var(--brass-l);text-decoration:none;border-bottom:1px solid rgba(201,161,90,.4);padding-bottom:3px;
-  transition:color .25s ease,border-color .25s ease}
-#varco-portale:hover{color:#f0e2c0;border-color:var(--brass-l)}
+#accesso{display:grid;gap:6px;width:min(100%,340px);text-align:left;margin-top:4px}
+#accesso label{font-family:var(--caps);font-size:clamp(9px,.9vw,11px);letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(233,214,162,.72);margin-top:6px}
+#accesso input{font-family:var(--sans);font-size:15px;color:var(--ink);background:rgba(244,237,228,.06);
+  border:1px solid rgba(201,161,90,.32);border-radius:2px;padding:11px 12px;outline:none;
+  transition:border-color .25s ease,background .25s ease;-webkit-appearance:none;appearance:none}
+#accesso input:focus{border-color:var(--brass-l);background:rgba(244,237,228,.1)}
+#accesso button{margin-top:14px}
+#accesso button[disabled]{opacity:.55;cursor:progress}
+.acc-err{margin:10px 0 0;font-family:var(--sans);font-size:12.5px;line-height:1.5;color:#e0a89a;text-align:center}
+#varco-dentro{display:grid;justify-items:center;gap:14px}
+.bentornato{margin:0;font-family:var(--sans);font-size:15px;color:rgba(244,237,228,.8)}
+.bentornato b{font-family:var(--serif);font-size:19px;color:var(--brass-l);font-weight:600}
+#t-esci{display:none;font-family:var(--caps);font-size:clamp(8.5px,.95vw,12px);letter-spacing:.2em;
+  text-transform:uppercase;color:rgba(244,237,228,.6);background:transparent;border:0;cursor:pointer;
+  padding:7px 8px 6px;transition:color .25s ease}
+#t-esci:hover{color:var(--brass-l)}
+#dash.dentro #t-esci{display:inline-block}
 .scheda-varco .lockup .ib{width:min(46vw,170px)}
 .scheda-varco .lockup .ma{width:min(10vw,36px)}
 .scheda-varco .lockup i{height:min(13vw,44px);margin:2px min(2.4vw,10px) 0}
@@ -567,8 +582,7 @@ img.fermo.on{opacity:1}
   #ingresso{left:12px;top:calc(62px + env(safe-area-inset-top,0px))}
   #avviso{position:fixed;left:50%;right:auto;bottom:calc(104px + env(safe-area-inset-bottom,0px));
     width:min(86vw,420px);text-align:center;font-size:10px;line-height:1.7}
-  #nota-anteprima{position:fixed;left:12px;bottom:calc(62px + env(safe-area-inset-bottom,0px));font-size:9px}
-  /* i segnaposto restano leggibili e grandi abbastanza da toccarli */
+    /* i segnaposto restano leggibili e grandi abbastanza da toccarli */
   .punto .nome{opacity:1;transform:translate(-50%,0);font-size:10px}
   .punto.basso .nome{opacity:1}
   .punto .luce{opacity:.55;box-shadow:inset 0 0 0 1px rgba(233,214,162,.45)}
@@ -649,10 +663,20 @@ img.fermo.on{opacity:1}
         <div class="lockup"><img class="ib" src="img/lk-ib.png" alt=""><i></i><img class="ma" src="img/lk-ma.png" alt=""></div>
         <div class="fil"></div>
         <h2>Area clienti</h2>
-        <p>Oltre questa porta ci sono i tuoi investimenti, le novità e i clienti che segui. L'accesso è riservato: nel sito ti vengono chieste le credenziali personali.</p>
-        <button id="varco-entra">Guarda l'anteprima</button>
-        <a id="varco-portale" href="#" hidden>Sei già cliente? Entra nella tua area riservata ›</a>
-        <small>L'anteprima mostra dati di esempio, senza credenziali</small>
+        <p>Oltre questa porta ci sono i tuoi investimenti, le novità e i clienti che segui. L'accesso è riservato.</p>
+        <form id="accesso" novalidate>
+          <label for="acc-user">Nome utente</label>
+          <input id="acc-user" name="username" type="text" autocomplete="username" autocapitalize="none"
+                 autocorrect="off" spellcheck="false" required>
+          <label for="acc-pw">Password</label>
+          <input id="acc-pw" name="password" type="password" autocomplete="current-password" required>
+          <button id="varco-entra" type="submit">Accedi</button>
+          <p class="acc-err" id="acc-err" role="alert" hidden></p>
+        </form>
+        <div id="varco-dentro" hidden>
+          <p class="bentornato">Bentornato, <b id="acc-nome"></b></p>
+          <button id="varco-apri">Entra</button>
+        </div>
       </div>
     </div>
     <div id="superfici"></div>
@@ -662,6 +686,7 @@ img.fermo.on{opacity:1}
         <img class="ib" src="img/lk-ib.png" alt="International Business"><i></i><img class="ma" src="img/lk-ma.png" alt="">
       </div>
       <nav id="dash-nav"></nav>
+      <button id="t-esci" type="button">Esci</button>
       <button id="t-audio" class="audio" aria-label="Audio"><span class="onde"></span></button>
     </div>
 
@@ -669,7 +694,6 @@ img.fermo.on{opacity:1}
     <button class="hud" id="esci" hidden>‹ Indietro</button>
     <button class="hud" id="ingresso" hidden>‹ Ingresso</button>
     <div id="avviso"></div>
-    <div id="nota-anteprima">Anteprima · dati di esempio</div>
     <div id="err"></div>
     <div id="scorri" hidden aria-hidden="true"><span>‹</span><span>›</span></div>
 
@@ -695,10 +719,51 @@ document.addEventListener('DOMContentLoaded',()=>{
   montaDash();
   const v=document.getElementById('velo');
   v&&v.addEventListener('click',()=>{ if(stato==='oggetto') esci(); });
-  const e=document.getElementById('varco-entra');
-  e&&e.addEventListener('click', apriPorta);
+  cablaAccesso();
 });
 stage.addEventListener('scroll',()=>{ stage.scrollTop=0; stage.scrollLeft=0; },{passive:true});
+
+/* ====================== accesso all'area riservata ====================== */
+function segnaAccesso(){
+  const f=$('#accesso'), d=$('#varco-dentro'), n=$('#acc-nome'), b=$('#dash');
+  if (f) f.hidden = entrato;
+  if (d) d.hidden = !entrato;
+  if (n) n.textContent = T.cliente.nome || '';
+  if (b) b.classList.toggle('dentro', entrato);
+}
+function cablaAccesso(){
+  const f=$('#accesso'), err=$('#acc-err'), btn=$('#varco-entra');
+  if (f) f.addEventListener('submit', async e=>{
+    e.preventDefault();
+    if (!btn || btn.disabled) return;
+    const etichetta=btn.textContent;
+    err.hidden=true; btn.disabled=true; btn.textContent='Verifica…';
+    try{
+      if (!window.API) throw new Error('modulo dati non caricato');
+      const r = await API.login($('#acc-user').value, $('#acc-pw').value);
+      if (!r || !r.ok){
+        err.textContent = (r && r.errore) || 'Nome utente o password non corretti.';
+        err.hidden=false; return;
+      }
+      applicaDati(await API.me());
+      entrato=true; segnaAccesso();
+      $('#acc-pw').value=''; $('#acc-user').value='';
+      apriPorta();
+    }catch(ex){
+      err.textContent='Accesso non riuscito. Riprova tra un momento.'; err.hidden=false;
+    }finally{ btn.disabled=false; btn.textContent=etichetta; }
+  });
+  const apri2=$('#varco-apri');
+  if (apri2) apri2.addEventListener('click', apriPorta);
+  const esc=$('#t-esci');
+  if (esc) esc.addEventListener('click', async ()=>{
+    try{ await API.logout(); }catch(e){}
+    entrato=false; svuotaDati(); segnaAccesso();
+    if (stato==='sala' || stato==='porta' || stato==='oggetto') vai('home');
+    avviso('Sei uscito dall\'area riservata');
+  });
+  segnaAccesso();
+}
 
 /* in verticale ci si guarda intorno trascinando il dito */
 (()=>{
@@ -792,25 +857,11 @@ const T = {
   contatti:{telefono:'351 691 9374', tel:'+393516919374', wa:'https://wa.me/393516919374',
     referente:'Marco Amato', ruolo:'General Manager', orari:'Lunedì – venerdì, 9:00 – 18:00',
     sedi:[['Napoli','Europe/Rome'],['Montecarlo','Europe/Monaco'],['Dubai','Asia/Dubai']]},
-  novita:[
-    ['8 novembre 2026','Nuova operazione Benzina aperta','Apertura della finestra mensile sul settore carburanti. Le posizioni sono state assegnate ai referenti di fiducia; chiusura prevista l\'8 dicembre.'],
-    ['20 ottobre 2026','Termini e condizioni aggiornati','Entrano in vigore i nuovi termini, con il dettaglio dell\'accesso per gradi alle operazioni. Li trovi sempre nella tua area riservata.'],
-    ['2 ottobre 2026','Acciaio: chiusura regolare','L\'operazione trimestrale sull\'acciaio si è chiusa alle condizioni concordate. Capitale e rendimento sono stati accreditati nei tempi previsti.'],
-    ['15 settembre 2026','Area riservata rinnovata','Nuova lettura delle operazioni, della rete e delle scadenze. Ogni cliente vede soltanto i propri dati.'],
-    ['1 settembre 2026','Nuova sede operativa a Montecarlo','Si aggiunge agli uffici di Napoli e Dubai per seguire le operazioni internazionali.'],
-  ],
+  novita:[],
   /* dati puramente dimostrativi: nessun cliente reale */
-  cliente:{nome:'Cliente Esempio', livello:'Referente di fiducia', stelle:'★'},
-  investimenti:[
-    ['Benzina','8 nov → 8 dic 2026','2.500 €','60%','1.500 €','corso',62],
-    ['Acciaio','1 lug → 2 ott 2026','3.000 €','25%','750 €','chiusa',100],
-    ['International Business','1 gen → 31 dic 2026','10.000 €','Annuale','—','corso',86],
-  ],
-  rete:[
-    ['A. Esempio','Benzina','1.500 €','20%','300 €'],
-    ['B. Dimostrativo','Benzina','2.000 €','10%','200 €'],
-    ['C. Prova','Acciaio','1.000 €','15%','150 €'],
-  ],
+  cliente:{nome:'', livello:'', stelle:'★'},
+  investimenti:[],
+  rete:[],
 };
 
 /* anteprime mostrate sugli oggetti nelle due viste d'insieme */
@@ -834,19 +885,93 @@ const ANTEPRIME = () => ({
       <dl><dt>Referente</dt><dd>${T.contatti.referente}<br><span class="ruolo">${T.contatti.ruolo}</span></dd>
       <dt>Telefono</dt><dd><span class="numero">${T.contatti.telefono}</span></dd>
       <dt>Orari</dt><dd><span class="ore">${T.contatti.orari}</span></dd></dl></div></div></div>`,
-  'schermo': `<div class="fog tv"><div class="cima"><h2>I tuoi clienti</h2><small>Rete</small></div>
-      <table><thead><tr><th>Cliente</th><th>Operazione</th><th class="n">Versato</th></tr></thead>
-      <tbody>${T.rete.map(([c,o,i])=>`<tr><td><b>${c}</b></td><td>${o}</td><td class="n">${i}</td></tr>`).join('')}</tbody></table></div>`,
-  'fogli': `<div class="stampa"><b>Novit&agrave;</b><em></em><span>${T.novita[0][1]}</span></div>`,
-  'novita': `<div class="inv"><div class="cima"><h2>${T.cliente.nome}</h2><span class="stella">${T.cliente.stelle}</span>
-      <small>${T.cliente.livello}</small></div>
-      <div class="riepilogo"><div class="cella"><b>Capitale</b><span>15.500<em> €</em></span></div>
-      <div class="cella"><b>Guadagno previsto</b><span>2250<em> €</em></span></div>
-      <div class="cella"><b>Operazioni</b><span>3</span></div><div class="cella"><b>Rete</b><span>3<em> clienti</em></span></div></div>
-      <table><thead><tr><th>Operazione</th><th>Periodo</th><th class="n">Versato</th><th>Stato</th></tr></thead>
-      <tbody>${T.investimenti.map(([o,per,inv,,,st])=>`<tr><td><b>${o}</b></td><td>${per}</td><td class="n">${inv}</td>
-      <td><span class="stato-op ${st}">${st==='corso'?'In corso':'Chiusa'}</span></td></tr>`).join('')}</tbody></table></div>`,
+  /* l'area riservata mostra sempre e solo i dati del cliente collegato */
+  'schermo': HCLIENTI(),
+  'fogli': `<div class="stampa"><b>Novit&agrave;</b><em></em><span>${
+      (T.novita[0] && T.novita[0][1]) || 'Area riservata'}</span></div>`,
+  'novita': HINVESTIMENTI(),
 });
+
+/* ============ contenuti dell'area riservata, scritti dai dati del cliente ============ */
+let RIDISEGNA = ()=>{}, entrato=false;
+const LIV={oro:'Decisionale',argento:'Referente di fiducia',bronzo:'Cliente',vuota:'Nuovo profilo'};
+const euro = n => Math.round(n||0).toLocaleString('it-IT')+' €';
+const gg = iso => { const [y,m,d]=String(iso||'').split('-'); return y? new Date(+y,+m-1,+d) : null; };
+const dataLunga = iso => { const d=gg(iso); return d? d.toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}) : ''; };
+const periodo = (a,b) => { const x=gg(a), y=gg(b); if(!x||!y) return '';
+  const f=d=>d.toLocaleDateString('it-IT',{day:'numeric',month:'short'});
+  return f(x)+' → '+f(y)+' '+y.getFullYear(); };
+
+function HNOVITA(){
+  const v=T.novita;
+  return `<div class="nov">
+    <div class="cima"><h2>Novità</h2><small>${v.length?'Aggiornate':'—'}</small></div>
+    <div class="finestra"><div class="pista">${v.length ? v.map(([d,t,p])=>
+      `<div class="nnot"><time>${d}</time><h4>${t}</h4><p>${p||''}</p></div>`).join('')
+      : '<div class="nnot"><h4>Nessuna novità al momento</h4></div>'}</div>
+      <div class="asta"><b></b></div></div></div>`;
+}
+function HINVESTIMENTI(){
+  const CL=T.cliente, IN=T.investimenti, tt=T.totali||{};
+  return `<div class="inv">
+    <div class="cima"><h2>${CL.nome||'Area riservata'}</h2><span class="stella">${CL.stelle||''}</span>
+      <small>${CL.livello||''}</small></div>
+    <div class="riepilogo">
+      <div class="cella"><b>Capitale</b><span>${Math.round(tt.capitale||0).toLocaleString('it-IT')}<em> €</em></span></div>
+      <div class="cella"><b>Guadagno previsto</b><span>${Math.round(tt.guadagno||0).toLocaleString('it-IT')}<em> €</em></span></div>
+      <div class="cella"><b>Operazioni</b><span>${IN.length}</span></div>
+      <div class="cella"><b>Rete</b><span>${T.rete.length}<em> clienti</em></span></div>
+    </div>
+    <table><thead><tr><th>Operazione</th><th>Periodo</th><th class="n">Investito</th><th class="n">Rendimento</th><th class="n">Guadagno</th><th>Stato</th></tr></thead>
+    <tbody>${IN.map(([o,per,inv,rend,gu,st,pc])=>`<tr><td><b>${o}</b>
+      <div class="barretta"><b style="width:${pc}%"></b></div></td><td>${per}</td>
+      <td class="n">${inv}</td><td class="n">${rend}</td><td class="n">${gu}</td>
+      <td><span class="stato-op ${st}">${st==='corso'?'In corso':'Chiusa'}</span></td></tr>`).join('')}</tbody></table>
+    <div class="pie"><span>Area riservata · solo i tuoi dati</span><span>FGMA Investment &amp; Management</span></div></div>`;
+}
+function HCLIENTI(){
+  const R=T.rete, tt=T.totali||{};
+  return `<div class="fog tv">
+    <div class="cima"><h2>I tuoi clienti</h2><small>Rete · ${R.length} ${R.length===1?'posizione':'posizioni'}</small></div>
+    <table><thead><tr><th>Cliente</th><th>Operazione</th><th class="n">Investito</th><th class="n">Quota</th><th class="n">Importo</th></tr></thead>
+    <tbody>${R.length ? R.map(([c,o,i,q,im])=>`<tr><td><b>${c}</b></td><td>${o}</td>
+      <td class="n">${i}</td><td class="n">${q}</td><td class="n">${im}</td></tr>`).join('')
+      : '<tr><td colspan="5">Nessun cliente nella tua rete.</td></tr>'}</tbody></table>
+    <div class="tot">Quote alla chiusura<span>${Math.round(tt.quoteRete||0).toLocaleString('it-IT')} €</span></div></div>`;
+}
+function HTARGA(){
+  const CL=T.cliente;
+  return `<div class="tgp"><div class="st">${CL.stelle||'★'}</div>
+    <div class="d"><b>${CL.nome||'Area clienti'}</b><small>${CL.livello||'accesso riservato'}</small></div></div>`;
+}
+function applicaDati(me){
+  if (!me){ svuotaDati(); return; }
+  const master = me.ruolo==='master';
+  T.cliente={ nome: me.nome||'', livello: master?'Direzione':(LIV[me.livello]||me.livello||''),
+              stelle: me.livello==='vuota'?'':'★' };
+  const ops = master ? (me.investimenti||[]) : (me.operazioni||[]);
+  T.investimenti = ops.map(o=>[ o.titolo||'', periodo(o.inizio,o.fine),
+      master ? '—' : euro(o.investito),
+      o.rendimentoPct ? o.rendimentoPct+'%' : (o.tuaPct ? o.tuaPct+'%' : 'Annuale'),
+      (!master && o.guadagnoPrevisto) ? euro(o.guadagnoPrevisto) : '—',
+      o.stato==='conclusa' ? 'chiusa' : 'corso', Math.round((o.progresso||0)*100) ]);
+  const rete = master
+    ? (me.clienti||[]).map(c=>({cliente:c.nome, titolo:(c.operazioni&&c.operazioni[0]&&c.operazioni[0].titolo)||'—',
+        investitoCliente:(c.totali&&c.totali.investito)||0, quotaPct:null, importo:(c.totali&&c.totali.guadagnoPrevisto)||0}))
+    : (me.rete||[]);
+  T.rete = rete.map(r=>[ r.cliente||r.nome||'', r.titolo||'', euro(r.investitoCliente),
+      r.quotaPct!=null ? r.quotaPct+'%' : '—', euro(r.importo) ]);
+  T.novita = (me.novita||[]).map(n=>[ dataLunga(n.data), n.titolo||'', n.testo||'' ]);
+  T.totali = { capitale: (me.totali&&me.totali.investito)||0,
+               guadagno: (me.totali&&me.totali.guadagnoPrevisto)||0,
+               quoteRete: (me.totaliRete&&me.totaliRete.importo)|| T.rete.reduce((a,r)=>a+(parseFloat(String(r[4]).replace(/[^\d]/g,''))||0),0) };
+  RIDISEGNA();
+}
+function svuotaDati(){
+  T.cliente={nome:'',livello:'',stelle:'★'}; T.investimenti=[]; T.rete=[]; T.novita=[];
+  T.totali={capitale:0,guadagno:0,quoteRete:0};
+  RIDISEGNA();
+}
 
 /* ====================== geometria ====================== */
 let SW=1280, SH=720;
@@ -1416,7 +1541,7 @@ function allaPorta(){
   $('#varco').classList.add('on'); $('#esci').hidden=false; segna();
 }
 function apriPorta(){
-  if (stato!=='porta') return;
+  if (stato!=='porta' || !entrato) return;
   stato='transito'; AUDIO.porta(); $('#varco').classList.remove('on'); $('#esci').hidden=true;
   setTimeout(()=>play('C2', vaiSala), 260);
 }
@@ -1614,48 +1739,34 @@ function costruisci(){
   orologi(); setInterval(orologi,20000);
 
   /* ---- fogli sul mobile: le novità ---- */
-  const sn=superficie('fogli',`<div class="nov">
-    <div class="cima"><h2>Novità</h2><small>Aggiornato oggi</small></div>
-    <div class="finestra"><div class="pista">${T.novita.map(([d,t,p])=>
-      `<div class="nnot"><time>${d}</time><h4>${t}</h4><p>${p}</p></div>`).join('')}</div>
-      <div class="asta"><b></b></div></div></div>`);
-  const sc3=trascina($('.finestra',sn), $('.pista',sn));
+  const sn=superficie('fogli', HNOVITA());
+  let sc3=trascina($('.finestra',sn), $('.pista',sn));
   AVVIA['fogli']=()=>setTimeout(sc3.inizio,30);
   TASTI['fogli']=e=>{ if(e.key==='ArrowDown') sc3.vai(1); if(e.key==='ArrowUp') sc3.vai(-1); };
 
   /* ---- lavagna in vetro: gli investimenti ---- */
-  const CL=T.cliente, IN=T.investimenti;
-  const tot=IN.reduce((a,r)=>a+parseFloat(r[2].replace(/[^\d]/g,'')),0);
-  const gua=IN.reduce((a,r)=>a+(parseFloat(r[4].replace(/[^\d]/g,''))||0),0);
-  const ss=superficie('novita',`<div class="inv">
-    <div class="cima"><h2>${CL.nome}</h2><span class="stella">${CL.stelle}</span>
-      <small>${CL.livello}</small></div>
-    <div class="riepilogo">
-      <div class="cella"><b>Capitale</b><span>${tot.toLocaleString('it-IT')}<em> €</em></span></div>
-      <div class="cella"><b>Guadagno previsto</b><span>${gua.toLocaleString('it-IT')}<em> €</em></span></div>
-      <div class="cella"><b>Operazioni</b><span>${IN.length}</span></div>
-      <div class="cella"><b>Rete</b><span>${T.rete.length}<em> clienti</em></span></div>
-    </div>
-    <table><thead><tr><th>Operazione</th><th>Periodo</th><th class="n">Investito</th><th class="n">Rendimento</th><th class="n">Guadagno</th><th>Stato</th></tr></thead>
-    <tbody>${IN.map(([o,per,inv,rend,gu,st,pc])=>`<tr><td><b>${o}</b>
-      <div class="barretta"><b style="width:${pc}%"></b></div></td><td>${per}</td>
-      <td class="n">${inv}</td><td class="n">${rend}</td><td class="n">${gu}</td>
-      <td><span class="stato-op ${st}">${st==='corso'?'In corso':'Chiusa'}</span></td></tr>`).join('')}</tbody></table>
-    <div class="pie"><span>Area riservata · solo i tuoi dati</span><span>FGMA Investment &amp; Management</span></div></div>`);
+  const ss=superficie('novita', HINVESTIMENTI());
 
   /* ---- schermo a parete: i clienti che hai portato ---- */
-  const totQ=T.rete.reduce((a,r)=>a+parseFloat(r[4].replace(/[^\d]/g,'')),0);
-  superficie('schermo',`<div class="fog tv">
-    <div class="cima"><h2>I tuoi clienti</h2><small>Rete · ${T.rete.length} posizioni</small></div>
-    <table><thead><tr><th>Cliente</th><th>Operazione</th><th class="n">Investito</th><th class="n">Quota</th><th class="n">Importo</th></tr></thead>
-    <tbody>${T.rete.map(([c,o,i,q,im])=>`<tr><td><b>${c}</b></td><td>${o}</td>
-      <td class="n">${i}</td><td class="n">${q}</td><td class="n">${im}</td></tr>`).join('')}</tbody></table>
-    <div class="tot">Quote alla chiusura<span>${totQ.toLocaleString('it-IT')} €</span></div></div>`);
+  superficie('schermo', HCLIENTI());
 
   /* ---- targa sulla porta della sala ---- */
-  superficie('targa',`<div class="tgp"><div class="st">${CL.stelle}</div>
-    <div class="d"><b>${CL.nome}</b><small>${CL.livello}</small></div></div>`,'piana');
+  const starga=superficie('targa', HTARGA(), 'piana');
 
+  /* dopo l'accesso i tre contenuti si riscrivono con i dati veri */
+  RIDISEGNA = ()=>{
+    sn.innerHTML=HNOVITA(); sc3=trascina($('.finestra',sn), $('.pista',sn));
+    AVVIA['fogli']=()=>setTimeout(sc3.inizio,30);
+    TASTI['fogli']=e=>{ if(e.key==='ArrowDown') sc3.vai(1); if(e.key==='ArrowUp') sc3.vai(-1); };
+    ss.innerHTML=HINVESTIMENTI();
+    $('#s-schermo').innerHTML=HCLIENTI();
+    starga.innerHTML=HTARGA();
+    const AN2=ANTEPRIME();
+    for (const k of ['novita','schermo','fogli']){
+      const e=$('#s-ant-'+k); if (e) e.innerHTML=AN2[k];
+    }
+  };
+  /* ---- vecchio blocco investimenti (ora in HINVESTIMENTI) ---- */
   /* ---- targa accanto alla porta dell'area clienti ---- */
   superficie('targa-clienti',`<div class="tgp"><div class="st">★</div>
     <div class="d"><b>Area clienti</b><small>accesso riservato</small></div></div>`,'piana');
