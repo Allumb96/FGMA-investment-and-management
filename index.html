@@ -22,7 +22,9 @@
 <body>
 <script src="dati.js"></script>
 <script src="viste-clienti.js?v=20261112-master-4"></script>
+<script src="grafici.js?v=20261112-grafici-1"></script>
 <link rel="stylesheet" href="conti.css?v=20261112-master-4">
+<link rel="stylesheet" href="grafici.css?v=20261112-grafici-1">
 <style>
 :root{
   color-scheme:dark;
@@ -332,7 +334,7 @@ img.fermo.on{opacity:1}
 .f2 .sedi{display:flex;gap:3.4cqw;margin-top:3.4cqh;padding-top:2.6cqh;border-top:1px solid rgba(140,115,70,.3)}
 .f2 .sede b{display:block;font-family:var(--caps);font-size:1.6cqh;letter-spacing:.2em;text-transform:uppercase;color:#8d6d3b}
 .f2 .sede time{display:block;font-family:var(--serif);font-size:3cqh;color:#15120d;font-variant-numeric:tabular-nums}
-.f2 .sede small{font-family:var(--sans);font-size:1.5cqh;color:#6e6552}
+.f2 .sede small{display:block;font-family:var(--sans);font-size:1.5cqh;line-height:1.45;color:#6e6552;max-width:22ch}
 .f2 .chiusa{margin-top:auto;display:flex;align-items:center;gap:2cqw;font-family:var(--caps);
   font-size:1.6cqh;letter-spacing:.26em;text-transform:uppercase;color:#8d6d3b}
 .f2 .chiusa em{flex:1;height:1px;background:linear-gradient(90deg,#c9a15a,rgba(140,115,70,.15))}
@@ -858,7 +860,8 @@ const T = {
     vigore:'In vigore dal 20 ottobre 2026'},
   contatti:{telefono:'351 691 9374', tel:'+393516919374', wa:'https://wa.me/393516919374',
     referente:'Marco Amato', ruolo:'General Manager', orari:'Lunedì – venerdì, 9:00 – 18:00',
-    sedi:[['Napoli','Europe/Rome'],['Montecarlo','Europe/Monaco'],['Dubai','Asia/Dubai']]},
+    sedi:[['Napoli','Europe/Rome','Via Luigi Einaudi 9, 80142 Napoli'],
+          ['Montecarlo','Europe/Monaco',''],['Dubai','Asia/Dubai','']]},
   novita:[],
   /* dati puramente dimostrativi: nessun cliente reale */
   cliente:{nome:'', livello:'', stelle:'★'},
@@ -915,7 +918,7 @@ function HNOVITA(){
 }
 let contoCorrente = null;
 function HINVESTIMENTI(){
-  return `<div class="inv conti"><div class="cima"><h2>${escapeConti(T.cliente.nome||'Area riservata')}</h2><small>${escapeConti(T.cliente.livello||'')}</small></div>${VisteFGMA.investimenti(contoCorrente)}</div>`;
+  return `<div class="inv conti"><div class="cima"><h2>${escapeConti(T.cliente.nome||'Area riservata')}</h2><small>${escapeConti(T.cliente.livello||'')}</small></div>${window.GraficiFGMA?GraficiFGMA.cruscotto(contoCorrente):''}${VisteFGMA.investimenti(contoCorrente)}</div>`;
 }
 function HCLIENTI(){
   return `<div class="inv conti"><div class="cima"><h2>${contoCorrente?.ruolo==='master'?'Tutti i clienti':'I tuoi clienti'}</h2></div>${VisteFGMA.clienti(contoCorrente)}</div>`;
@@ -1681,7 +1684,8 @@ function costruisci(){
     <div class="f2 dt">
       <h3>Vuoi diventare cliente?</h3>
       <p>Scrivici su WhatsApp o chiamaci: ti rispondiamo di persona e fissiamo un primo colloquio, senza impegno.</p>
-      <div class="sedi">${C.sedi.map(([n,z])=>`<div class="sede"><b>${n}</b><time data-z="${z}">--:--</time><small>ora locale</small></div>`).join('')}</div>
+      <div class="sedi">${C.sedi.map(([n,z,via])=>`<div class="sede"><b>${n}</b><time data-z="${z}">--:--</time>
+        <small>${via || 'ora locale'}</small></div>`).join('')}</div>
       <div class="azioni"><a class="wa" href="${C.wa}" target="_blank" rel="noopener">WhatsApp</a>
         <a class="tel" href="tel:${C.tel}">Chiama</a></div>
     </div>
@@ -1713,7 +1717,7 @@ function costruisci(){
   TASTI['fogli']=e=>{ if(e.key==='ArrowDown') sc3.vai(1); if(e.key==='ArrowUp') sc3.vai(-1); };
 
   /* ---- lavagna in vetro: gli investimenti ---- */
-  const ss=superficie('novita', HINVESTIMENTI());
+  const ss=superficie('novita', HINVESTIMENTI()); window.GraficiFGMA&&GraficiFGMA.cabla(ss);
 
   /* ---- schermo a parete: i clienti che hai portato ---- */
   superficie('schermo', HCLIENTI());
@@ -1726,7 +1730,7 @@ function costruisci(){
     sn.innerHTML=HNOVITA(); sc3=trascina($('.finestra',sn), $('.pista',sn));
     AVVIA['fogli']=()=>setTimeout(sc3.inizio,30);
     TASTI['fogli']=e=>{ if(e.key==='ArrowDown') sc3.vai(1); if(e.key==='ArrowUp') sc3.vai(-1); };
-    ss.innerHTML=HINVESTIMENTI();
+    ss.innerHTML=HINVESTIMENTI(); window.GraficiFGMA&&GraficiFGMA.cabla(ss);
     $('#s-schermo').innerHTML=HCLIENTI();
     starga.innerHTML=HTARGA();
     const AN2=ANTEPRIME();

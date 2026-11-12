@@ -1,0 +1,46 @@
+/* Cruscotto dei conti: stessa lingua grafica delle schede, con i colori dei grafici verificati. */
+.conti .cruscotto {margin:0 0 3.5cqh;padding-bottom:3cqh;border-bottom:1px solid #c9a15a30}
+.conti .cruscotto .kpis {margin:0 0 3cqh;grid-template-columns:repeat(4,minmax(0,1fr))}
+.conti .gr {margin:0;display:block}
+.conti .gr figcaption {font:600 1.9cqh/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#c9a15a;margin-bottom:1.4cqh}
+.conti .gr-and .tela {position:relative;width:100%}
+.conti .gr-and svg {display:block;width:100%;height:auto;aspect-ratio:100/34;overflow:visible}
+.conti .gr-and .gri {stroke:#ffffff14;stroke-width:.18}
+.conti .gr-and .asse {stroke:#ffffff38;stroke-width:.22}
+.conti .gr-and .ar1 {fill:#2a2314}
+.conti .gr-and .ar2 {fill:#13272c}
+.conti .gr-and .li1 {fill:none;stroke:#bb862c;stroke-width:.45;vector-effect:non-scaling-stroke}
+.conti .gr-and .li2 {fill:none;stroke:#1f9aad;stroke-width:.45;vector-effect:non-scaling-stroke}
+.conti .gr-and .oggi {stroke:#f4ede480;stroke-width:.2;stroke-dasharray:1 1}
+.conti .gr-and text {font-family:var(--sans);fill:#c4c1ba}
+.conti .gr-and .ax,.conti .gr-and .ay,.conti .gr-and .oggi-t {font-size:2.1px}
+.conti .gr-and .ay {text-anchor:end}
+.conti .gr-and .mirino {display:none}
+.conti .gr-and .mirino.on {display:inline}
+.conti .gr-and .mirino line {stroke:#f4ede488;stroke-width:.2}
+.conti .gr-and .mirino .p1 {fill:#bb862c;stroke:#14171a;stroke-width:.4}
+.conti .gr-and .mirino .p2 {fill:#1f9aad;stroke:#14171a;stroke-width:.4}
+.conti .suggerimento-g {position:absolute;z-index:3;pointer-events:none;transform:translate(-50%,-115%);
+  background:#080c0fef;border:1px solid #c9a15a66;padding:1.2cqh 1.4cqw;font:1.9cqh/1.5 var(--sans);
+  color:#eef3f5;white-space:nowrap;box-shadow:0 .6cqh 2cqh #00000080}
+.conti .suggerimento-g b {display:block;font:600 1.6cqh/1.4 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:#c9a15a;margin-bottom:.6cqh}
+.conti .suggerimento-g i,.conti .leg i {display:inline-block;width:1.5cqh;height:1.5cqh;border-radius:2px;margin-right:.8cqw;vertical-align:-.15cqh}
+.conti .leg {list-style:none;display:flex;flex-wrap:wrap;gap:1cqh 2.4cqw;margin:1.6cqh 0 0;padding:0;font-size:1.95cqh;color:#c4c1ba}
+.conti .torte {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2.6cqw;margin-top:3.2cqh}
+.conti .torta-riga {display:grid;grid-template-columns:auto minmax(0,1fr);gap:2cqw;align-items:center}
+.conti .torta-riga svg {width:15cqh;height:15cqh}
+.conti .gr-torta text {font-family:var(--serif);fill:#f7f1e5;text-anchor:middle}
+.conti .gr-torta .t-mez {font-size:13px;font-weight:600}
+.conti .gr-torta .t-sot {font-size:7px;fill:#c4c1ba;font-family:var(--sans);text-transform:uppercase;letter-spacing:.14em}
+.conti .gr-torta path {stroke:#14171a;stroke-width:1.4}
+.conti .leg-v {flex-direction:column;flex-wrap:nowrap;gap:1cqh;margin:0}
+.conti .leg-v li {display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:baseline;gap:.8cqw}
+.conti .leg-v span {overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.conti .leg-v b {font:600 2.05cqh var(--sans);color:#f7f1e5;font-variant-numeric:tabular-nums}
+.conti .vuoto-g {margin:1.5cqh 0 0;color:#c4c1ba}
+@media (orientation:portrait) and (max-width:820px){
+  .conti .cruscotto .kpis {grid-template-columns:repeat(2,minmax(0,1fr))}
+  .conti .torte {grid-template-columns:1fr;gap:3.2cqh}
+  .conti .torta-riga svg {width:17cqw;height:17cqw}
+  .conti .gr-and svg {aspect-ratio:100/42}
+}
