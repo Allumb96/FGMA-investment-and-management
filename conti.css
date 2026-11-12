@@ -1,0 +1,39 @@
+/* Financial details within the villa's projected surfaces. */
+.inv.conti {overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;display:block;font:2.2cqh/1.5 var(--sans);user-select:text;padding:3cqh 3cqw;scrollbar-color:#967742 #14171a}
+.conti .cima {margin-bottom:3cqh}
+.conti h3 {font:600 3cqh var(--serif);color:#f5eddd;margin:3cqh 0 1.5cqh}
+.conti .kpis,.conti .facts {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2cqh 2cqw;margin:2cqh 0}
+.conti .kpis>div,.conti .facts>div {padding:1.6cqh 1.4cqw;background:#ffffff06;border:1px solid #c9a15a30}
+.conti .lbl,.conti small,.conti .desc,.conti .sezione-s,.conti .note {color:#c4c1ba}
+.conti .lbl,.conti .sub,.conti .kpis small {display:block;font-size:1.9cqh}
+.conti .kpis b,.conti .facts b {display:block;font-size:2.8cqh;font-variant-numeric:tabular-nums}
+.conti .pos,.conti .kpis b.pos,.conti td.pos {color:#8fe0ad}
+.conti .op,.conti details {border:1px solid #c9a15a45;border-radius:1cqh;background:#ffffff04;margin:2cqh 0;padding:2cqh 1.6cqw}
+.conti .acc-head {display:block;width:100%;background:none;border:0;text-align:left;color:inherit;font:inherit;cursor:pointer;padding:0}
+.conti .op-head h2 {font:600 2.8cqh var(--serif);margin:0;color:#f7f1e5;letter-spacing:0}
+.conti .op-head p {margin:.7cqh 0}
+.conti .pill,.conti .apri {color:#d8bc87;font-size:1.9cqh}
+.conti .acc-body {display:none}
+.conti .acc.open>.acc-body {display:block;padding-top:2cqh}
+.conti .mini-foot,.conti .meter-top,.conti .dates {display:flex;justify-content:space-between;gap:2cqw;flex-wrap:wrap;margin:1cqh 0}
+.conti .meter {height:.6cqh;background:#ffffff18;margin:1cqh 0;border-radius:1cqh;overflow:hidden}
+.conti .meter-fill {height:100%;background:#8fe0ad;width:calc(var(--p,0)*100%)}
+.conti .rl-row {border-bottom:1px solid #ffffff20;padding:1cqh 0}
+.conti .rl-row dl {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1cqh}
+.conti dd {margin:0;font-variant-numeric:tabular-nums}
+.conti dt {color:#c4c1ba}
+.conti .tab-scroll {overflow-x:auto}
+.conti table {font-size:2cqh}
+.conti summary {cursor:pointer;font-weight:600;color:#ebd4a5}
+.conti .andamento {border-top:1px solid #c9a15a50;margin-top:3cqh}
+.conti .andamento p {font-size:1.9cqh;color:#c4c1ba}
+.conti .lv-g {display:block;width:100%;height:auto;max-height:45cqh;overflow:visible}
+.conti .lv-g .tr {fill:none;stroke:#c9a15a;stroke-width:2}
+.conti .lv-g .linea {stroke:#8fe0ad;stroke-width:3}
+.conti .lv-g circle {fill:#8fe0ad}
+.conti .lv-g text {fill:#eae2d6;font:13px sans-serif}
+.conti .lv-g .pc {fill:#8fe0ad}
+.conti .lv-pc svg {width:7cqw;height:2cqh;stroke:#c9a15a;fill:none}
+.conti .cat-grid,.conti .op-grid {display:block}
+.conti .seguiti {padding-left:2cqw}
+.conti .seguiti small {margin-left:1cqw}

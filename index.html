@@ -21,6 +21,8 @@
 </head>
 <body>
 <script src="dati.js"></script>
+<script src="viste-clienti.js"></script>
+<link rel="stylesheet" href="conti.css">
 <style>
 :root{
   color-scheme:dark;
@@ -911,34 +913,14 @@ function HNOVITA(){
       : '<div class="nnot"><h4>Nessuna novità al momento</h4></div>'}</div>
       <div class="asta"><b></b></div></div></div>`;
 }
+let contoCorrente = null;
 function HINVESTIMENTI(){
-  const CL=T.cliente, IN=T.investimenti, tt=T.totali||{};
-  return `<div class="inv">
-    <div class="cima"><h2>${CL.nome||'Area riservata'}</h2><span class="stella">${CL.stelle||''}</span>
-      <small>${CL.livello||''}</small></div>
-    <div class="riepilogo">
-      <div class="cella"><b>Capitale</b><span>${Math.round(tt.capitale||0).toLocaleString('it-IT')}<em> €</em></span></div>
-      <div class="cella"><b>Guadagno previsto</b><span>${Math.round(tt.guadagno||0).toLocaleString('it-IT')}<em> €</em></span></div>
-      <div class="cella"><b>Operazioni</b><span>${IN.length}</span></div>
-      <div class="cella"><b>Rete</b><span>${T.rete.length}<em> clienti</em></span></div>
-    </div>
-    <table><thead><tr><th>Operazione</th><th>Periodo</th><th class="n">Investito</th><th class="n">Rendimento</th><th class="n">Guadagno</th><th>Stato</th></tr></thead>
-    <tbody>${IN.map(([o,per,inv,rend,gu,st,pc])=>`<tr><td><b>${o}</b>
-      <div class="barretta"><b style="width:${pc}%"></b></div></td><td>${per}</td>
-      <td class="n">${inv}</td><td class="n">${rend}</td><td class="n">${gu}</td>
-      <td><span class="stato-op ${st}">${st==='corso'?'In corso':'Chiusa'}</span></td></tr>`).join('')}</tbody></table>
-    <div class="pie"><span>Area riservata · solo i tuoi dati</span><span>FGMA Investment &amp; Management</span></div></div>`;
+  return `<div class="inv conti"><div class="cima"><h2>${escapeConti(T.cliente.nome||'Area riservata')}</h2><small>${escapeConti(T.cliente.livello||'')}</small></div>${VisteFGMA.investimenti(contoCorrente)}</div>`;
 }
 function HCLIENTI(){
-  const R=T.rete, tt=T.totali||{};
-  return `<div class="fog tv">
-    <div class="cima"><h2>I tuoi clienti</h2><small>Rete · ${R.length} ${R.length===1?'posizione':'posizioni'}</small></div>
-    <table><thead><tr><th>Cliente</th><th>Operazione</th><th class="n">Investito</th><th class="n">Quota</th><th class="n">Importo</th></tr></thead>
-    <tbody>${R.length ? R.map(([c,o,i,q,im])=>`<tr><td><b>${c}</b></td><td>${o}</td>
-      <td class="n">${i}</td><td class="n">${q}</td><td class="n">${im}</td></tr>`).join('')
-      : '<tr><td colspan="5">Nessun cliente nella tua rete.</td></tr>'}</tbody></table>
-    <div class="tot">Quote alla chiusura<span>${Math.round(tt.quoteRete||0).toLocaleString('it-IT')} €</span></div></div>`;
+  return `<div class="inv conti"><div class="cima"><h2>${contoCorrente?.ruolo==='master'?'Tutti i clienti':'I tuoi clienti'}</h2></div>${VisteFGMA.clienti(contoCorrente)}</div>`;
 }
+function escapeConti(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function HTARGA(){
   const CL=T.cliente;
   return `<div class="tgp"><div class="st">${CL.stelle||'★'}</div>
@@ -946,28 +928,14 @@ function HTARGA(){
 }
 function applicaDati(me){
   if (!me){ svuotaDati(); return; }
+  contoCorrente = me;
   const master = me.ruolo==='master';
-  T.cliente={ nome: me.nome||'', livello: master?'Direzione':(LIV[me.livello]||me.livello||''),
-              stelle: me.livello==='vuota'?'':'★' };
-  const ops = master ? (me.investimenti||[]) : (me.operazioni||[]);
-  T.investimenti = ops.map(o=>[ o.titolo||'', periodo(o.inizio,o.fine),
-      master ? '—' : euro(o.investito),
-      o.rendimentoPct ? o.rendimentoPct+'%' : (o.tuaPct ? o.tuaPct+'%' : 'Annuale'),
-      (!master && o.guadagnoPrevisto) ? euro(o.guadagnoPrevisto) : '—',
-      o.stato==='conclusa' ? 'chiusa' : 'corso', Math.round((o.progresso||0)*100) ]);
-  const rete = master
-    ? (me.clienti||[]).map(c=>({cliente:c.nome, titolo:(c.operazioni&&c.operazioni[0]&&c.operazioni[0].titolo)||'—',
-        investitoCliente:(c.totali&&c.totali.investito)||0, quotaPct:null, importo:(c.totali&&c.totali.guadagnoPrevisto)||0}))
-    : (me.rete||[]);
-  T.rete = rete.map(r=>[ r.cliente||r.nome||'', r.titolo||'', euro(r.investitoCliente),
-      r.quotaPct!=null ? r.quotaPct+'%' : '—', euro(r.importo) ]);
-  T.novita = (me.novita||[]).map(n=>[ dataLunga(n.data), n.titolo||'', n.testo||'' ]);
-  T.totali = { capitale: (me.totali&&me.totali.investito)||0,
-               guadagno: (me.totali&&me.totali.guadagnoPrevisto)||0,
-               quoteRete: (me.totaliRete&&me.totaliRete.importo)|| T.rete.reduce((a,r)=>a+(parseFloat(String(r[4]).replace(/[^\d]/g,''))||0),0) };
+  T.cliente={nome:me.nome||'', livello:master?'Direzione':(LIV[me.livello]||me.livello||''),stelle:me.livello==='vuota'?'':'★'};
+  T.novita=(me.novita||[]).map(n=>[dataLunga(n.data),n.titolo||'',n.testo||'']);
   RIDISEGNA();
 }
 function svuotaDati(){
+  contoCorrente = null;
   T.cliente={nome:'',livello:'',stelle:'★'}; T.investimenti=[]; T.rete=[]; T.novita=[];
   T.totali={capitale:0,guadagno:0,quoteRete:0};
   RIDISEGNA();
