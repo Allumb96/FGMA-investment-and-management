@@ -25,7 +25,17 @@ for(let i=0;i<fixtures.length;i++){
  assert(!/NaN|Infinity/.test(html));assert(html.includes('Andamento previsto'));
 }
 const master={nome:'Master',ruolo:'master',clienti:[fixtures[2],fixtures[4]],investimenti:[]};
-const html=views.investimenti(master);assert(html.includes('Versamenti per investimento'));assert(html.includes('3.400,50'));assert(html.includes('150,25'));assert(html.includes('Di cui reinvestito'));
+const html=views.investimenti(master);assert(html.includes('Capitale per investimento'));assert(html.includes('4.500,50'));assert(!html.includes('Di cui reinvestito'));assert(!html.includes('Capitale versato netto'));
 const fractional=views.clienti(fixtures[6]);assert(fractional.includes('50,25'));assert(!fractional.includes('5.025'));
 fs.writeFileSync('/tmp/fgma-fixture.json',JSON.stringify(fixtures[6]));
 console.log('PASS: 8 accounting scenarios, original portal parity, master aggregation, cents, immutable session, empty graph');
+
+const reinvestor=person([op(1000,100,'2026-01-01','2026-02-01'),op(2000,10,'2026-02-01','2026-03-01')]);reinvestor.nome='Reinvestitore';
+const newcomer=person([op(1500,10,'2026-02-01','2026-03-01')]);newcomer.nome='Nuovo cliente';
+const ordered=views.investimenti({ruolo:'master',nome:'Master',clienti:[newcomer,reinvestor],investimenti:[]});
+const group=ordered.split('2 febbraio')[0];
+const pos=ordered.indexOf('3.500');
+assert(pos>=0);const second=ordered.slice(pos,ordered.indexOf('Tutti i clienti'));
+assert(second.indexOf('Reinvestitore')<second.indexOf('Nuovo cliente'),'reinvested 2000 must precede fresh 1500');
+assert(second.includes('2.000'));assert(!ordered.includes('Aggiunta / prelievo'));
+console.log('PASS: master sorts by full operation capital including reinvested gains');

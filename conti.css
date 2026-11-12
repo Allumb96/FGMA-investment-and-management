@@ -59,3 +59,12 @@
 .conti .acc-head .pos {color:#8fe0ad}
 .inv.conti .cima h2 {font-size:4.4cqh;color:#fff;letter-spacing:.04em}
 .conti summary:focus-visible,.conti .acc-head:focus-visible {outline:2px solid #ebd4a5;outline-offset:3px}
+
+/* Larger master-only rows; account holders retain their existing presentation. */
+.conti .master-conti .riepilogo-titolo {font-size:clamp(24px,4.6cqh,38px);font-weight:700;color:#fff;line-height:1.25}
+.conti .master-conti .riepilogo-dettagli {font-size:clamp(16px,2.8cqh,23px);color:#f2d48a;line-height:1.5}
+.conti .master-conti .riepilogo-invito {grid-column:2;color:#e2c888;font-size:clamp(12px,1.9cqh,16px);font-weight:400}
+.conti .master-conti details>summary {padding:2.8cqh 2cqw;margin:-2cqh -1.6cqw;row-gap:1cqh}
+.conti .master-conti details[open]>summary {margin-bottom:2cqh}
+.conti .master-conti details>summary::before {grid-row:1 / 4;font-size:clamp(26px,4.5cqh,38px)}
+.conti .master-conti details details {margin-left:1cqw;background:#ffffff05}
