@@ -12,6 +12,12 @@
   }
 
   const STATO = { non_iniziata: ['Non ancora iniziata', ''], in_corso: ['In corso', 'run'], conclusa: ['Conclusa', 'done'] };
+  // ordine di lettura: in arrivo in alto, in corso al centro, concluse in fondo;
+  // dentro ogni gruppo dal versamento piu' alto al piu' basso
+  const RANGO = { non_iniziata: 0, in_corso: 1, conclusa: 2 };
+  const rango = (x) => (x && RANGO[x.stato] != null ? RANGO[x.stato] : 1);
+  const perLettura = (a, b) => rango(a) - rango(b) || (b.investito || 0) - (a.investito || 0)
+    || String(a.inizio || '').localeCompare(String(b.inizio || ''));
   const giorni = (n) => `${n} ${n === 1 ? 'giorno' : 'giorni'}`;
   const ilData = (iso, b) => { const g = Number(String(iso).slice(8, 10)); const t = b ? `<b>${dataIt(iso)}</b>` : dataIt(iso); return (g === 8 || g === 11 ? "l'" : 'il ') + t; };
   const fraseStato = (x) => x.stato === 'conclusa' ? `L'operazione si è conclusa ${ilData(x.fine, true)}.`
@@ -103,15 +109,18 @@
           <div><span class="lbl">Da dare al cliente a scadenza (previsto)</span><b>${eur(op.totaleAllaFine)}</b></div>
         </dl>
         <p class="note">Il guadagno indicato è quello previsto in base al rendimento concordato e viene riconosciuto alla chiusura dell'operazione.</p>`;
-    const ops = me.operazioni.map((op, i) => scheda(pre + 'op' + i, { titolo: op.titolo, desc: op.descrizione, x: op, img: op.immagine,
+    const ops = me.operazioni.slice().sort(perLettura).map((op, i) => scheda(pre + 'op' + i, { titolo: op.titolo, desc: op.descrizione, x: op, img: op.immagine,
       riga1: `Investito <b>${eur(op.investito)}</b>`, riga2: `Totale previsto <b>${eur(op.totaleAllaFine)}</b>`, dettaglio: dettOp(op) })).join('')
       || '<div class="empty">Non ci sono operazioni attive al momento.</div>';
 
     // guadagni da clienti: raggruppati per investimento, un elenco per nome con i soli dati che contano
-    const gruppi = {}, inizi = {};
-    me.operazioni.forEach((o) => { gruppi[o.titolo] = gruppi[o.titolo] || []; inizi[o.titolo] = o.inizio; });
-    rete.forEach((r) => { (gruppi[r.titolo] = gruppi[r.titolo] || []).push(r); inizi[r.titolo] = r.inizio; });
-    const titoli = Object.keys(gruppi).sort((x, y) => (inizi[x] < inizi[y] ? -1 : inizi[x] > inizi[y] ? 1 : 0));
+    const gruppi = {}, capi = {};
+    const segna = (t, x, peso) => { gruppi[t] = gruppi[t] || [];
+      const c = capi[t] = capi[t] || { stato: x.stato, inizio: x.inizio, investito: 0 };
+      c.stato = x.stato; c.inizio = x.inizio; c.investito += peso || 0; };
+    me.operazioni.forEach((o) => segna(o.titolo, o, o.investito));
+    rete.forEach((r) => { segna(r.titolo, r, r.investitoCliente); gruppi[r.titolo].push(r); });
+    const titoli = Object.keys(gruppi).sort((x, y) => perLettura(capi[x], capi[y]));
     const pctF = (n) => (Number.isInteger(n) ? n : String(n).replace('.', ',')) + '%';
     const gruppoHtml = (titolo, tutte, k) => {
       const righe = tutte.filter((x) => x.cliente), rett = tutte.filter((x) => x.tipo === 'rettifica');
@@ -150,8 +159,8 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
   const seguitiHtml = (me) => (me.clientiSeguiti && me.clientiSeguiti.length) ? `<h2 class="sezione-t rete">I tuoi clienti</h2><p class="sezione-s">Le persone che segui come referente di fiducia.</p>
     <ul class="ref-l seguiti" data-reveal>${me.clientiSeguiti.map((c) => `<li>${stella(c.livello)}<span><b>${esc(c.nome)}</b><small>${c.investimenti ? c.investimenti + (c.investimenti === 1 ? ' investimento' : ' investimenti') : 'Nessun investimento per ora'}</small></span></li>`).join('')}</ul>` : '';
   // tutti gli investimenti (solo decisionali e referenti), con la loro percentuale
-  const catalogoHtml = (me) => (me.investimenti && me.investimenti.length) ? `<h2 class="sezione-t rete">Tutti gli investimenti</h2><p class="sezione-s">Le operazioni concluse, in corso e in arrivo, con la tua percentuale dove è già definita.</p>
-    <div class="cat-grid">${me.investimenti.map((i) => { const st = i.stato === 'non_iniziata' ? ['In arrivo', 'soon'] : STATO[i.stato]; return `<article class="op cat" data-reveal>
+  const catalogoHtml = (me) => (me.investimenti && me.investimenti.length) ? `<h2 class="sezione-t rete">Tutti gli investimenti</h2><p class="sezione-s">Le operazioni in arrivo, in corso e concluse, con la tua percentuale dove è già definita.</p>
+    <div class="cat-grid">${me.investimenti.slice().sort(perLettura).map((i) => { const st = i.stato === 'non_iniziata' ? ['In arrivo', 'soon'] : STATO[i.stato]; return `<article class="op cat" data-reveal>
       <div class="op-head"><div><h2>${esc(i.titolo)}</h2><p class="desc">${esc(i.descrizione)}</p></div><span class="pill ${st[1]}"><i></i>${st[0]}</span></div>
       <div class="cat-f"><span>${dataIt(i.inizio, { day: 'numeric', month: 'short', year: 'numeric' })} → ${dataIt(i.fine, { day: 'numeric', month: 'short', year: 'numeric' })}</span>${i.tuaPct != null ? `<span class="cat-pct">La tua percentuale <b>${i.tuaPct}%</b></span>` : ''}</div>
     </article>`; }).join('')}</div>` : '';
@@ -211,13 +220,15 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
       <div><span class="lbl">Guadagni previsti dei clienti</span><b class="pos">${eur(somma('guadagni'))}</b></div>
       <div><span class="lbl">Totale previsto ai clienti</span><b>${eur(somma('inMano'))}</b></div></div>
       <p>${clienti.length} clienti · ${somma('n')} operazioni</p><h3>Capitale per investimento</h3>
-      ${Array.from(gruppi.values()).sort((a,b)=>a.o.inizio.localeCompare(b.o.inizio)).map(({o,righe})=>riga(o.titolo,
+      ${Array.from(gruppi.values()).sort((a,b)=>rango(a.o)-rango(b.o)
+        ||b.righe.reduce((s,r)=>s+r.o.investito,0)-a.righe.reduce((s,r)=>s+r.o.investito,0)
+        ||a.o.inizio.localeCompare(b.o.inizio)).map(({o,righe})=>riga(o.titolo,
         `${eur(righe.reduce((s,r)=>s+r.o.investito,0))} impiegati · ${dataIt(o.inizio)} → ${dataIt(o.fine)}<span class="totale-clienti">Da dare ai clienti a scadenza: <strong>${eur(righe.reduce((s,r)=>s+Math.round(r.o.totaleAllaFine*100),0)/100)}</strong> <small>(capitale + guadagni previsti)</small></span>`,
         `<div class="kpis"><div><span class="lbl">Capitale da restituire</span><b>${eur(righe.reduce((s,r)=>s+Math.round(r.o.investito*100),0)/100)}</b></div><div><span class="lbl">Guadagni previsti da riconoscere</span><b class="pos">${eur(righe.reduce((s,r)=>s+Math.round(r.o.guadagnoPrevisto*100),0)/100)}</b></div></div><p>Clienti ordinati per capitale nell'operazione, dal più alto al più basso.</p>`+
         righe.sort((a,b)=>b.o.investito-a.o.investito||a.nome.localeCompare(b.nome,'it')).map(r=>riga(r.nome,`${eur(r.o.investito)} nell'operazione`,dettaglio(r.o))).join(''))).join('')}
       <h3>Tutti i clienti · ${clienti.length}</h3>
       ${clienti.map(({c})=>riga(c.nome,`${eur(capitale(c))} complessivi nelle operazioni · ${c.operazioni.length} operazioni`,
-        c.operazioni.slice().sort((a,b)=>b.investito-a.investito||a.inizio.localeCompare(b.inizio)).map(o=>riga(o.titolo,`${eur(o.investito)} nell'operazione`,dettaglio(o))).join('')||'<p>Nessuna operazione registrata.</p>')).join('')}${catalogoHtml(me)}</div>`;
+        c.operazioni.slice().sort(perLettura).map(o=>riga(o.titolo,`${eur(o.investito)} nell'operazione`,dettaglio(o))).join('')||'<p>Nessuna operazione registrata.</p>')).join('')}${catalogoHtml(me)}</div>`;
   }
   window.VisteFGMA = {
     // Exposed pure renderer also allows regression checks against the original portal.

@@ -21,7 +21,7 @@
 </head>
 <body>
 <script src="dati.js"></script>
-<script src="viste-clienti.js?v=20261112-master-4"></script>
+<script src="viste-clienti.js?v=20261112-ordine-1"></script>
 <script src="grafici.js?v=20261112-grafici-1"></script>
 <link rel="stylesheet" href="conti.css?v=20261112-master-4">
 <link rel="stylesheet" href="grafici.css?v=20261112-grafici-1">
@@ -52,11 +52,9 @@ img.fermo.on{opacity:1}
 #intro{position:absolute;inset:0;z-index:30;display:grid;place-items:center;background:radial-gradient(120% 90% at 50% 40%,#16130f 0%,#070706 70%);transition:opacity .9s ease}
 #intro.via{opacity:0;pointer-events:none}
 .intro-box{display:grid;justify-items:center;gap:22px;padding:24px;text-align:center}
-.lockup{display:flex;align-items:flex-start;filter:drop-shadow(0 2px 16px rgba(0,0,0,.55))}
-.lockup img{display:block;height:auto}
-.lockup .ib{width:min(52vw,360px)}
-.lockup .ma{width:min(11vw,74px)}
-.lockup i{display:block;width:1px;height:min(14vw,92px);margin:4px min(3vw,20px) 0;background:linear-gradient(180deg,#fff,var(--brass-l) 55%,var(--brass));transform:rotate(32deg)}
+.lockup{display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 2px 16px rgba(0,0,0,.55))}
+.lockup img{display:block;height:auto;max-width:100%}
+.lockup .mk{width:min(58vw,390px)}
 .intro-nome{font-family:var(--caps);font-size:clamp(11px,1.5vw,14px);letter-spacing:.32em;color:var(--brass-l);text-transform:uppercase}
 .carica{width:min(60vw,280px);height:1px;background:rgba(244,237,228,.14);position:relative;overflow:hidden}
 .carica b{position:absolute;inset:0 auto 0 0;width:0;background:linear-gradient(90deg,var(--brass-d),var(--brass-l));transition:width .25s ease}
@@ -158,9 +156,7 @@ img.fermo.on{opacity:1}
   padding:7px 8px 6px;transition:color .25s ease}
 #t-esci:hover{color:var(--brass-l)}
 #dash.dentro #t-esci{display:inline-block}
-.scheda-varco .lockup .ib{width:min(46vw,170px)}
-.scheda-varco .lockup .ma{width:min(10vw,36px)}
-.scheda-varco .lockup i{height:min(13vw,44px);margin:2px min(2.4vw,10px) 0}
+.scheda-varco .lockup .mk{width:min(54vw,215px)}
 .scheda-varco .fil{width:72%;height:1px;background:linear-gradient(90deg,transparent,var(--brass),transparent)}
 .scheda-varco h2{font-family:var(--caps);font-weight:600;font-size:clamp(15px,2.3vh,21px);letter-spacing:.22em;
   text-transform:uppercase;color:var(--brass-l);margin:0}
@@ -182,12 +178,9 @@ img.fermo.on{opacity:1}
   background:linear-gradient(180deg,rgba(7,7,6,.82),rgba(7,7,6,.34) 70%,rgba(7,7,6,0));
   opacity:0;visibility:hidden;transition:opacity .6s ease,visibility 0s linear .6s}
 #dash.on{opacity:1;visibility:visible;transition:opacity .7s ease}
-#dash .marchio{display:flex;align-items:flex-start;gap:clamp(5px,.8vw,10px);cursor:pointer;flex:0 0 auto}
+#dash .marchio{display:flex;align-items:center;cursor:pointer;flex:0 0 auto}
 #dash .marchio img{display:block;height:auto}
-#dash .marchio .ib{width:clamp(74px,9vw,122px)}
-#dash .marchio .ma{width:clamp(16px,1.9vw,26px)}
-#dash .marchio i{display:block;width:1px;height:clamp(16px,2vw,26px);margin:2px clamp(4px,.6vw,8px) 0;
-  background:linear-gradient(180deg,#fff,var(--brass-l) 60%,var(--brass))}
+#dash .marchio .mk{width:clamp(80px,9.6vw,136px);filter:drop-shadow(0 1px 8px rgba(0,0,0,.55))}
 #dash nav{margin-left:auto;display:flex;align-items:center;gap:clamp(3px,.9vw,14px);flex-wrap:nowrap;overflow:hidden;padding-left:12px}
 #dash button{font-family:var(--caps);font-size:clamp(8.5px,.95vw,12px);letter-spacing:.2em;text-transform:uppercase;
   color:rgba(244,237,228,.68);background:transparent;border:0;border-radius:2px;cursor:pointer;white-space:nowrap;
@@ -221,8 +214,7 @@ img.fermo.on{opacity:1}
 .targa-ing{width:100%;height:100%;display:grid;place-items:center;align-content:center;gap:5cqh;padding:8cqw;
   background:radial-gradient(120% 90% at 30% 20%,#2a2722 0%,#121110 55%,#090908 100%);
   box-shadow:inset 0 0 0 1.2cqw #b8955a,inset 0 0 0 1.8cqw #3a2e1c,inset 0 0 6cqw rgba(0,0,0,.8)}
-.targa-ing .lockup .ib{width:56cqw}.targa-ing .lockup .ma{width:12cqw}
-.targa-ing .lockup i{height:15cqw;margin:.6cqw 3cqw 0}
+.targa-ing .lockup .mk{width:76cqw}
 .targa-ing .riga{width:62cqw;height:1px;background:linear-gradient(90deg,transparent,#c9a15a,transparent)}
 .targa-ing .t{font-family:var(--caps);font-weight:600;color:#e3cf9c;letter-spacing:.2em;text-align:center;font-size:6.2cqw;line-height:1.35;text-shadow:0 1px 0 #000}
 .targa-ing .t small{display:block;font-size:4.2cqw;letter-spacing:.3em;color:#bfa77a}
@@ -239,8 +231,8 @@ img.fermo.on{opacity:1}
 .faccia.via{transform:rotateY(-180deg) translateZ(1cqw);opacity:0}
 .faccia.poi{transform:rotateY(180deg);opacity:0}
 .bigl .fronte{align-items:center;text-align:center;justify-content:center;gap:3cqh}
-.bigl .fronte .lockup .ib{width:40cqw}.bigl .fronte .lockup .ma{width:8.6cqw}
-.bigl .fronte .lockup i{height:10.5cqw;margin:.4cqw 2.2cqw 0;background:linear-gradient(180deg,#6b5a3b,#b8955a)}
+.bigl .fronte .lockup{filter:none}
+.bigl .fronte .lockup .mk{width:64cqw}
 .bigl .fronte .n{font-family:var(--caps);font-weight:700;letter-spacing:.3em;font-size:4.4cqw;color:#3a2d19}
 .bigl .fronte .r{font-family:var(--sans);letter-spacing:.26em;text-transform:uppercase;font-size:2.5cqw;color:#7a6845}
 .bigl .fronte .fil{width:46cqw;height:1px;background:linear-gradient(90deg,transparent,#b8955a,transparent)}
@@ -309,9 +301,8 @@ img.fermo.on{opacity:1}
   padding:6cqh 5.6cqw 5cqh;display:flex;flex-direction:column;
   box-shadow:inset 0 0 0 1px rgba(150,130,95,.35)}
 .f2.dt{transform:rotateY(180deg)}
-.f2 .lockup{display:flex;align-items:flex-start;gap:1.6cqw;filter:invert(1) brightness(.25)}
-.f2 .lockup .ib{width:30cqw}.f2 .lockup .ma{width:6.4cqw}
-.f2 .lockup i{display:block;width:1px;height:6cqw;margin:.4cqw 1cqw 0;background:#8d6d3b}
+.f2 .lockup{display:flex;align-items:center;justify-content:center;filter:none}
+.f2 .lockup .mk{width:48cqw}
 .f2 .fil{height:1px;margin:3cqh 0;background:linear-gradient(90deg,#c9a15a,rgba(140,115,70,.18))}
 .f2 dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:2cqh 3cqw;align-items:baseline}
 .f2 dt{font-family:var(--caps);font-size:1.7cqh;letter-spacing:.24em;text-transform:uppercase;color:#8d6d3b}
@@ -569,9 +560,7 @@ img.fermo.on{opacity:1}
   #stage{transition:left .6s cubic-bezier(.3,0,.2,1)}
   #intro,#velo,#varco,#err{position:fixed;inset:0}
   #dash{position:fixed;left:0;right:0;top:0;gap:8px;padding:calc(8px + env(safe-area-inset-top,0px)) 10px 10px}
-  #dash .marchio .ib{width:66px}
-  #dash .marchio .ma{width:15px}
-  #dash .marchio i{height:14px;margin-top:1px}
+  #dash .marchio .mk{width:74px}
   #dash nav{overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding-left:4px;
     -webkit-mask:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 14px),transparent);
     mask:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 14px),transparent)}
@@ -615,7 +604,7 @@ img.fermo.on{opacity:1}
   .f2 .azioni{flex-direction:column;gap:1.4cqh}
   .f2 .azioni a{text-align:center;font-size:1.7cqh;padding:1.6cqh 2cqw}
   .f2 .sedi{gap:5cqw}
-  .f2 .lockup .ib{width:46cqw}.f2 .lockup .ma{width:10cqw}.f2 .lockup i{height:9cqw}
+  .f2 .lockup .mk{width:62cqw}
   .inv .riepilogo{grid-template-columns:1fr 1fr}
   .inv table th:nth-child(2),.inv td:nth-child(2),
   .inv table th:nth-child(4),.inv td:nth-child(4){display:none}
@@ -649,9 +638,8 @@ img.fermo.on{opacity:1}
 
     <div class="layer" id="lay-citofono">
       <div class="surf" id="s-targhetta"><div class="targa-ing">
-        <div class="lockup"><img class="ib" src="img/lk-ib.png" alt=""><i></i><img class="ma" src="img/lk-ma.png" alt=""></div>
+        <div class="lockup"><img class="mk" src="img/fgma.png" alt="FGMA Investment and Management"></div>
         <div class="riga"></div>
-        <div class="t">FGMA<small>Investment &amp; Management</small></div>
       </div></div>
       <button class="tasto" id="t-ospiti" aria-label="Suona: ospiti"></button>
       <button class="tasto" id="t-clienti" aria-label="Suona: clienti"></button>
@@ -664,7 +652,7 @@ img.fermo.on{opacity:1}
     <div id="velo"></div>
     <div id="varco">
       <div class="scheda-varco">
-        <div class="lockup"><img class="ib" src="img/lk-ib.png" alt=""><i></i><img class="ma" src="img/lk-ma.png" alt=""></div>
+        <div class="lockup"><img class="mk" src="img/fgma.png" alt="FGMA Investment and Management"></div>
         <div class="fil"></div>
         <h2>Area clienti</h2>
         <p>Oltre questa porta ci sono i tuoi investimenti, le novità e i clienti che segui. L'accesso è riservato.</p>
@@ -687,7 +675,7 @@ img.fermo.on{opacity:1}
 
     <div id="dash">
       <div class="marchio" id="dash-home" role="button" tabindex="0" aria-label="Home">
-        <img class="ib" src="img/lk-ib.png" alt="International Business"><i></i><img class="ma" src="img/lk-ma.png" alt="">
+        <img class="mk" src="img/fgma.png" alt="FGMA Investment and Management">
       </div>
       <nav id="dash-nav"></nav>
       <button id="t-esci" type="button">Esci</button>
@@ -703,8 +691,7 @@ img.fermo.on{opacity:1}
 
     <div id="intro">
       <div class="intro-box">
-        <div class="lockup"><img class="ib" src="img/lk-ib.png" alt="International Business"><i></i><img class="ma" src="img/lk-ma.png" alt=""></div>
-        <div class="intro-nome">Investment &amp; Management</div>
+        <div class="lockup"><img class="mk" src="img/fgma.png" alt="FGMA Investment and Management"></div>
         <div class="carica"><b id="barra"></b></div>
         <button class="btn-entra" id="entra" disabled>Entra</button>
         <div class="intro-nota" id="nota">Preparazione della villa…</div>
@@ -816,8 +803,8 @@ let stato='intro', aperto=null, origine='scrivania', inCorso=null;
 /* ====================== testi ====================== */
 const T = {
   biglietto: [
-    {cls:'fronte', html:`<div class="lockup"><img class="ib" src="img/lk-ib.png" alt=""><i></i><img class="ma" src="img/lk-ma.png" alt=""></div>
-      <div class="fil"></div><div class="n">FGMA</div><div class="r">Investment &amp; Management</div>`},
+    {cls:'fronte', html:`<div class="lockup"><img class="mk" src="img/fgma.png" alt="FGMA Investment and Management"></div>
+      <div class="fil"></div>`},
     {html:`<div class="kick">Chi siamo</div><h3>La società al centro di tutto.</h3>
       <p>FGMA Investment &amp; Management nasce da International Business, la nostra attività storica, e oggi ne è la casa madre: qui selezioniamo, strutturiamo e seguiamo ogni operazione che proponiamo.</p>`},
     {html:`<div class="kick">Accesso</div><h3>Opportunità riservate.</h3>
@@ -885,7 +872,7 @@ const ANTEPRIME = () => ({
       ${T.percorso.slice(0,3).map((p,k)=>`<div class="passo"><div class="q">${String(k+1).padStart(2,'0')}</div>
         <div><h3>${p.t}</h3><p>${p.d}</p></div></div>`).join('')}</div></div></div>`,
   'contatti': `<div class="card2"><div class="mazzo2"><div class="f2 av">
-      <div class="lockup"><img class="ib" src="img/lk-ib.png" alt=""><i></i><img class="ma" src="img/lk-ma.png" alt=""></div>
+      <div class="lockup"><img class="mk" src="img/fgma-carta.png" alt="FGMA Investment and Management"></div>
       <div class="fil"></div>
       <dl><dt>Referente</dt><dd>${T.contatti.referente}<br><span class="ruolo">${T.contatti.ruolo}</span></dd>
       <dt>Telefono</dt><dd><span class="numero">${T.contatti.telefono}</span></dd>
@@ -1672,7 +1659,7 @@ function costruisci(){
   const C=T.contatti;
   const sc2=superficie('contatti',`<div class="card2"><div class="mazzo2">
     <div class="f2 av">
-      <div class="lockup"><img class="ib" src="img/lk-ib.png" alt=""><i></i><img class="ma" src="img/lk-ma.png" alt=""></div>
+      <div class="lockup"><img class="mk" src="img/fgma-carta.png" alt="FGMA Investment and Management"></div>
       <div class="fil"></div>
       <dl>
         <dt>Referente</dt><dd>${C.referente}<br><span class="ruolo">${C.ruolo}</span></dd>
