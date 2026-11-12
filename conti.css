@@ -68,3 +68,7 @@
 .conti .master-conti details[open]>summary {margin-bottom:2cqh}
 .conti .master-conti details>summary::before {grid-row:1 / 4;font-size:clamp(26px,4.5cqh,38px)}
 .conti .master-conti details details {margin-left:1cqw;background:#ffffff05}
+
+.conti .master-conti .totale-clienti {display:block;margin-top:1cqh;color:#f2d48a}
+.conti .master-conti .totale-clienti strong {font-weight:700}
+.conti .master-conti .totale-clienti small {color:#e2c888;font-size:.8em}

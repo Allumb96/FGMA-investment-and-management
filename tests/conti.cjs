@@ -39,3 +39,7 @@ assert(pos>=0);const second=ordered.slice(pos,ordered.indexOf('Tutti i clienti')
 assert(second.indexOf('Reinvestitore')<second.indexOf('Nuovo cliente'),'reinvested 2000 must precede fresh 1500');
 assert(second.includes('2.000'));assert(!ordered.includes('Aggiunta / prelievo'));
 console.log('PASS: master sorts by full operation capital including reinvested gains');
+
+assert(ordered.includes('Da dare ai clienti a scadenza: <strong>3.850'),'operation payout must include 3500 capital plus 350 gains');
+assert(ordered.includes('Capitale da restituire'));assert(ordered.includes('Guadagni previsti da riconoscere'));
+console.log('PASS: operation payout equals capital plus each client gain');

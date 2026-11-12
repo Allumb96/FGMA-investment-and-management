@@ -100,7 +100,7 @@
           ${op.riporto > 0 ? `<div><span class="lbl">Reinvestito dalla precedente</span><b>${eur(op.riporto)}</b></div>` : ''}${op.dalRete > 0 ? `<div><span class="lbl">Da ${lblRete} reinvestito</span><b>${eur(op.dalRete)}</b></div>` : ''}${(op.riporto > 0 || op.dalRete > 0) && op.aggiunta ? `<div><span class="lbl">${op.aggiunta < 0 ? 'Prelievo' : 'Tua aggiunta'}</span><b>${op.aggiunta < 0 ? '−' : '+'}${eur(Math.abs(op.aggiunta))}</b></div>` : ''}
           <div><span class="lbl">Rendimento concordato</span><b>${op.rendimentoPct}%</b></div>
           <div><span class="lbl">Guadagno previsto</span><b class="pos">+${eur(op.guadagnoPrevisto)}</b></div>
-          <div><span class="lbl">Totale a fine operazione</span><b>${eur(op.totaleAllaFine)}</b></div>
+          <div><span class="lbl">Da dare al cliente a scadenza (previsto)</span><b>${eur(op.totaleAllaFine)}</b></div>
         </dl>
         <p class="note">Il guadagno indicato è quello previsto in base al rendimento concordato e viene riconosciuto alla chiusura dell'operazione.</p>`;
     const ops = me.operazioni.map((op, i) => scheda(pre + 'op' + i, { titolo: op.titolo, desc: op.descrizione, x: op, img: op.immagine,
@@ -204,7 +204,7 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
     const dettaglio = o => `<div class="facts"><div><span class="lbl">Capitale nell'operazione</span><b>${eur(o.investito)}</b></div>
       <div><span class="lbl">Rendimento concordato</span><b>${o.rendimentoPct}%</b></div>
       <div><span class="lbl">Guadagno previsto</span><b class="pos">${eur(o.guadagnoPrevisto)}</b></div>
-      <div><span class="lbl">Totale a fine operazione</span><b>${eur(o.totaleAllaFine)}</b></div></div>
+      <div><span class="lbl">Da dare al cliente a scadenza (previsto)</span><b>${eur(o.totaleAllaFine)}</b></div></div>
       <p>${dataIt(o.inizio)} → ${dataIt(o.fine)} · ${STATO[o.stato][0]}</p>${o.descrizione?`<p>${esc(o.descrizione)}</p>`:''}`;
     const riga = (titolo, sotto, html) => `<details><summary><span class="riepilogo-titolo">${esc(titolo)}</span><span class="riepilogo-dettagli">${sotto}</span><span class="riepilogo-invito">Apri / chiudi dettagli</span></summary>${html}</details>`;
     return `<div class="master-conti"><div class="kpis"><div><span class="lbl">Capitale complessivo delle operazioni</span><b>${eur(clienti.reduce((s,{c})=>s+capitale(c),0))}</b><small>Somma degli importi impiegati in tutte le operazioni, anche successive; non è il saldo attuale.</small></div>
@@ -212,8 +212,8 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
       <div><span class="lbl">Totale previsto ai clienti</span><b>${eur(somma('inMano'))}</b></div></div>
       <p>${clienti.length} clienti · ${somma('n')} operazioni</p><h3>Capitale per investimento</h3>
       ${Array.from(gruppi.values()).sort((a,b)=>a.o.inizio.localeCompare(b.o.inizio)).map(({o,righe})=>riga(o.titolo,
-        `${eur(righe.reduce((s,r)=>s+r.o.investito,0))} impiegati · ${dataIt(o.inizio)} → ${dataIt(o.fine)}`,
-        `<p>Clienti ordinati per capitale nell'operazione, dal più alto al più basso.</p>`+
+        `${eur(righe.reduce((s,r)=>s+r.o.investito,0))} impiegati · ${dataIt(o.inizio)} → ${dataIt(o.fine)}<span class="totale-clienti">Da dare ai clienti a scadenza: <strong>${eur(righe.reduce((s,r)=>s+Math.round(r.o.totaleAllaFine*100),0)/100)}</strong> <small>(capitale + guadagni previsti)</small></span>`,
+        `<div class="kpis"><div><span class="lbl">Capitale da restituire</span><b>${eur(righe.reduce((s,r)=>s+Math.round(r.o.investito*100),0)/100)}</b></div><div><span class="lbl">Guadagni previsti da riconoscere</span><b class="pos">${eur(righe.reduce((s,r)=>s+Math.round(r.o.guadagnoPrevisto*100),0)/100)}</b></div></div><p>Clienti ordinati per capitale nell'operazione, dal più alto al più basso.</p>`+
         righe.sort((a,b)=>b.o.investito-a.o.investito||a.nome.localeCompare(b.nome,'it')).map(r=>riga(r.nome,`${eur(r.o.investito)} nell'operazione`,dettaglio(r.o))).join(''))).join('')}
       <h3>Tutti i clienti · ${clienti.length}</h3>
       ${clienti.map(({c})=>riga(c.nome,`${eur(capitale(c))} complessivi nelle operazioni · ${c.operazioni.length} operazioni`,
