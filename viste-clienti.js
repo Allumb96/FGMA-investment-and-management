@@ -203,11 +203,11 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
       <div><span class="lbl">Guadagni previsti dei clienti</span><b class="pos">${eur(somma('guadagni'))}</b></div>
       <div><span class="lbl">Totale previsto ai clienti</span><b>${eur(somma('inMano'))}</b></div></div>
       <p>${clienti.length} clienti · ${somma('n')} operazioni · Reinvestimenti complessivi: ${eur(clienti.reduce((s,{c})=>s+c.operazioni.reduce((t,o)=>t+(o.riporto||0)+(o.dalRete||0),0),0))}</p><h3>Versamenti per investimento</h3>
-      ${Array.from(gruppi.values()).sort((a,b)=>a.o.inizio.localeCompare(b.o.inizio)).map(({o,righe})=>`<details><summary>${esc(o.titolo)} · ${dataIt(o.inizio)} → ${dataIt(o.fine)} · ${eur(righe.reduce((s,r)=>s+r.o.investito,0))}</summary>
+      ${Array.from(gruppi.values()).sort((a,b)=>a.o.inizio.localeCompare(b.o.inizio)).map(({o,righe})=>`<details><summary><span class="riepilogo-titolo">${esc(o.titolo)}</span><span class="riepilogo-dettagli">${dataIt(o.inizio)} → ${dataIt(o.fine)} · Capitale operazione ${eur(righe.reduce((s,r)=>s+r.o.investito,0))}</span></summary>
       <div class="tab-scroll"><table><thead><tr><th>Cliente</th><th>Capitale operazione</th><th>Di cui reinvestito</th><th>Aggiunta / prelievo</th><th>Rendimento</th><th>Guadagno previsto</th><th>Totale finale</th></tr></thead><tbody>
       ${righe.map(({nome,o})=>`<tr><td>${esc(nome)}</td><td>${eur(o.investito)}</td><td>${eur((o.riporto||0)+(o.dalRete||0))}</td><td>${eur(o.aggiunta)}</td><td>${o.rendimentoPct}%</td><td class="pos">${eur(o.guadagnoPrevisto)}</td><td>${eur(o.totaleAllaFine)}</td></tr>`).join('')}</tbody></table></div></details>`).join('')}
       <h3>Tutti i clienti · ${clienti.length}</h3>
-      ${clienti.map(({c,p})=>`<details><summary>${esc(c.nome)} · Capitale operazioni ${eur(c.operazioni.reduce((s,o)=>s+o.investito,0))} · di cui reinvestiti ${eur(c.operazioni.reduce((s,o)=>s+(o.riporto||0)+(o.dalRete||0),0))}</summary>${p.html}</details>`).join('')}${catalogoHtml(me)}`;
+      ${clienti.map(({c,p})=>`<details><summary><span class="riepilogo-titolo">${esc(c.nome)}</span><span class="riepilogo-dettagli">Capitale operazioni ${eur(c.operazioni.reduce((s,o)=>s+o.investito,0))} · di cui reinvestiti ${eur(c.operazioni.reduce((s,o)=>s+(o.riporto||0)+(o.dalRete||0),0))}</span></summary>${p.html}</details>`).join('')}${catalogoHtml(me)}`;
   }
   window.VisteFGMA = {
     // Exposed pure renderer also allows regression checks against the original portal.
