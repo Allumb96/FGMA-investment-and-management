@@ -199,6 +199,44 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
       <p>Valori previsti alla chiusura della catena di reinvestimenti più lunga; non sono guadagni già incassati. Le operazioni parallele sono dettagliate sopra.</p>
       ${lavagnaHtml(me, p.ord)}</section>${p.reteHtml}${seguitiHtml(me)}${catalogoHtml(me)}` };
   };
+  // Referral income comes from the stored network entries, not personal returns.
+  function datiReferenti(me) {
+    if (!me || me.ruolo !== 'master') return [];
+    const norm = s => String(s || '').trim().replace(/\s+/g,' ').toLocaleLowerCase('it');
+    const all = me.clienti || [];
+    const identity = item => {
+      const nome = typeof item === 'string' ? item : item.nome || item.cliente || '';
+      const user = typeof item === 'object' ? item.username : '';
+      const matches = all.filter(c => user ? norm(c.username) === norm(user) : norm(c.nome) === norm(nome));
+      const c = matches.length === 1 ? matches[0] : null;
+      return {key:c ? (norm(c.username)||norm(c.nome)) : (norm(user)||norm(nome)), nome:c ? c.nome : nome};
+    };
+    return all.map(c => {
+      const rete=(c.rete||[]).filter(r=>r.cliente && r.tipo!=='terzi' && r.tipo!=='rettifica');
+      const nomi=new Map();
+      const add=item=>{const x=identity(item);if(x.key&&!nomi.has(x.key))nomi.set(x.key,{nome:x.nome,righe:[],centesimi:0});return nomi.get(x.key);};
+      (c.clientiSeguiti||[]).forEach(add);
+      all.filter(x=>norm(x.referente) && (norm(x.referente)===norm(c.nome) || norm(x.referente)===norm(c.username))).forEach(add);
+      rete.forEach(r=>{const x=add({nome:r.cliente});if(x){x.righe.push(r);x.centesimi+=Math.round(Number(r.importo||0)*100);}});
+      const titoli=new Set(rete.map(r=>r.titolo));
+      const rettifiche=(c.rete||[]).filter(r=>r.tipo==='rettifica' && titoli.has(r.titolo));
+      const lordo=[...nomi.values()].reduce((s,x)=>s+x.centesimi,0);
+      const rettifica=rettifiche.reduce((s,r)=>s+Math.round(Number(r.importo||0)*100),0);
+      return {nome:c.nome,livello:c.livello,clienti:[...nomi.values()].sort((a,b)=>b.centesimi-a.centesimi||a.nome.localeCompare(b.nome,'it')),lordo,rettifica,rettifiche,totale:lordo+rettifica};
+    }).filter(r=>r.clienti.length || r.livello==='argento')
+      .sort((a,b)=>b.totale-a.totale||b.clienti.length-a.clienti.length||a.nome.localeCompare(b.nome,'it'));
+  }
+  function referentiHtml(me) {
+    if (!me || me.ruolo!=='master') return '';
+    const refs=datiReferenti(me), cash=c=>eur(c/100);
+    return `<details class="referenti"><summary><span class="riepilogo-titolo"><span class="stella-referenti" aria-hidden="true">★</span> Referenti</span><span class="riepilogo-dettagli">${refs.length} referenti · clienti portati e guadagni dalla rete</span><span class="riepilogo-invito">Apri / chiudi dettagli</span></summary>
+      <p>Ogni cliente è contato una sola volta per referente, anche con più operazioni. I guadagni sono quelli previsti dalle quote registrate, non attestano pagamenti già ricevuti. Esclusi investimenti personali e margini sul capitale di terzi.</p>
+      ${refs.length ? refs.map(r=>`<details><summary><span class="riepilogo-titolo">${esc(r.nome)}</span><span class="riepilogo-dettagli">${r.clienti.length} ${r.clienti.length===1?'cliente portato':'clienti portati'} · Guadagno previsto <span class="pos">${cash(r.totale)}</span></span><span class="riepilogo-invito">Vedi clienti e quote</span></summary>
+        ${r.clienti.map(c=>`<details><summary><span class="riepilogo-titolo">${esc(c.nome)}</span><span class="riepilogo-dettagli">Guadagno previsto per il referente: <span class="pos">${cash(c.centesimi)}</span></span></summary>
+          ${c.righe.length ? `<div class="tab-scroll"><table><thead><tr><th>Operazione</th><th>Scadenza</th><th>Quota referente</th><th>Guadagno previsto</th></tr></thead><tbody>${c.righe.map(o=>`<tr><td>${esc(o.titolo||'—')}</td><td>${o.fine?dataIt(o.fine):'—'}</td><td>${o.quotaPct!=null?esc(o.quotaPct)+'%':'—'}</td><td class="pos">${eur(o.importo||0)}</td></tr>`).join('')}</tbody></table></div>` : '<p>Nessuna quota di guadagno registrata per questo cliente.</p>'}</details>`).join('') || '<p>Nessun cliente associato.</p>'}
+        ${r.rettifiche.length?`<div class="rettifiche-referenti"><p>Quote clienti: ${cash(r.lordo)}</p>${r.rettifiche.map(x=>`<p>${esc(x.etichetta||'Rettifica')} · ${esc(x.titolo||'')}: ${eur(x.importo||0)}</p>`).join('')}<p>Guadagno previsto dopo le rettifiche: <b class="pos">${cash(r.totale)}</b></p></div>`:''}</details>`).join('') : '<p>Nessun referente registrato.</p>'}</details>`;
+  }
+
   function master(me, parte) {
     const capitale = c => c.operazioni.reduce((s,o)=>s+o.investito,0);
     const clienti = me.clienti.map((c,i) => ({c, p:pannello(c, `master-${i}-`)}))
@@ -231,14 +269,14 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
       ${clienti.map(({c})=>riga(c.nome,`${eur(capitale(c))} complessivi nelle operazioni · ${c.operazioni.length} operazioni`,
         c.operazioni.slice().sort(perLettura).map(o=>riga(o.titolo,`${eur(o.investito)} nell'operazione`,dettaglio(o))).join('')||'<p>Nessuna operazione registrata.</p>')).join('')}`;
     // le due schermate della sala mostrano due tagli diversi degli stessi dati
-    const corpo = parte === 'clienti' ? tuttiIClienti
+    const corpo = parte === 'clienti' ? referentiHtml(me) + tuttiIClienti
       : parte === 'investimenti' ? perInvestimento + catalogoHtml(me)
       : perInvestimento + tuttiIClienti + catalogoHtml(me);
     return `<div class="master-conti">${intestazione}${corpo}</div>`;
   }
   window.VisteFGMA = {
     // Exposed pure renderer also allows regression checks against the original portal.
-    pannello, lavagnaHtml,
+    pannello, lavagnaHtml, datiReferenti,
     investimenti(me) {
       if (!me) return '<p>Accedi per consultare i tuoi investimenti.</p>';
       const m=copia(me);
@@ -260,3 +298,4 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
     const t=b.querySelector('.apri-t'); if(t)t.textContent=open?'Nascondi i dettagli':'Mostra i dettagli';
   });
 })();
+

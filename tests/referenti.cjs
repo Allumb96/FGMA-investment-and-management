@@ -1,0 +1,13 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const ctx={window:{},document:{addEventListener(){}},Intl};vm.createContext(ctx);vm.runInContext(fs.readFileSync('viste-clienti.js','utf8'),ctx);const v=ctx.window.VisteFGMA;
+const person=(nome,extra={})=>({nome,username:nome.toLowerCase(),operazioni:[],rete:[],clientiSeguiti:[],totaliRete:{importo:0,investitoClienti:0},...extra});
+const row=(cliente,importo,extra={})=>({cliente,importo,titolo:'A',fine:'2026-12-01',quotaPct:5,...extra});
+const ref=person('Referente',{livello:'argento',clientiSeguiti:[{nome:'Anna'},{nome:'ANNA'}],rete:[row('Anna',10.25),row(' anna ',20.15),row('Luca',5.1),row('Terzi',900,{tipo:'terzi'}),row('',-2.5,{tipo:'rettifica',etichetta:'Rettifica rete'})]});
+const m={ruolo:'master',nome:'FGMA',clienti:[ref,person('Anna',{referente:'Referente'}),person('Luca'),person('Zero',{livello:'argento'}),person('SoloTerzi',{rete:[row('Terzi',50,{tipo:'terzi'})]})]};
+const original=JSON.stringify(m),data=v.datiReferenti(m);
+assert.equal(data.length,2);assert.equal(data[0].clienti.length,2);assert.equal(data[0].lordo,3550);assert.equal(data[0].totale,3300);assert.equal(data[0].clienti[0].centesimi,3040);assert.equal(data[1].clienti.length,0);
+assert.equal(v.datiReferenti({ruolo:'cliente',clienti:m.clienti}).length,0);
+const html=v.clienti(m);assert(html.includes('stella-referenti'));assert(html.includes('Referenti'));assert(html.indexOf('class="referenti"')<html.indexOf('Scheda di ogni cliente'));assert(!v.investimenti(m).includes('class="referenti"'));assert(!v.clienti(ref).includes('class="referenti"'));assert.equal(JSON.stringify(m),original);
+assert(v.clienti({ruolo:'master',nome:'Master',clienti:[]}).includes('Nessun referente registrato'));
+assert(!/NaN|undefined/.test(html));
+console.log('PASS: unique referral clients, cents, adjustments, third-party exclusions, zero clients, master-only scope, immutable data');

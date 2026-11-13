@@ -72,3 +72,10 @@
 .conti .master-conti .totale-clienti {display:block;margin-top:1cqh;color:#f2d48a}
 .conti .master-conti .totale-clienti strong {font-weight:700}
 .conti .master-conti .totale-clienti small {color:#e2c888;font-size:.8em}
+
+
+/* Referral row in the master clients view. */
+.conti .referenti .stella-referenti {color:#f2c94c;font-size:1.12em;margin-right:.3em}
+.conti .referenti .pos {color:#8fe0ad}
+.conti .referenti .tab-scroll {overflow-x:auto}
+.conti .rettifiche-referenti {border-top:1px solid #c9a15a45;margin-top:2cqh;padding-top:1cqh}
