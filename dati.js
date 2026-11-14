@@ -44,7 +44,7 @@
     },
     {
       "titolo": "Breve termine · Trimestrale e mensile una tantum",
-      "testo": "Operazioni FGMA Investment & Management a breve termine: trimestrali oppure mensili una tantum. I nostri referenti di fiducia ufficiali sono Carlo Bontempi, Alfonso Milano e Giovanni Cacchio."
+      "testo": "Operazioni FGMA Investment & Management a breve termine: trimestrali oppure mensili una tantum."
     },
     {
       "titolo": "Tutto sotto controllo, fino alla scadenza",
