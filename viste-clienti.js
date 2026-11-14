@@ -144,7 +144,7 @@
         <div class="acc-body" id="acc-${esc(k)}" role="region" aria-label="Dettagli di ${esc(titolo)}"><div class="acc-in"><div class="acc-pad">${corpo}</div></div></div>
       </article>`;
     };
-    const reteHtml = rete.length ? `<h2 class="sezione-t rete">${princ ? 'Guadagni dai tuoi clienti' : terzi ? 'Altre entrate' : 'Guadagni dalla tua rete'}</h2><p class="sezione-s">${terzi ? 'Capitale di terzi impiegato nelle operazioni. Dal rendimento dell\'operazione si corrisponde l\'interesse concordato: la differenza è il tuo margine, indicato a parte dai tuoi guadagni personali e incluso nel totale previsto.' : princ ? 'Su Caffè Ferrante ai clienti spetta la loro percentuale: a te spetta il resto del ritorno, calcolato sul totale investito. Sono indicati a parte dai tuoi guadagni personali e sono inclusi nel totale previsto.' : 'Quote sugli investimenti dei clienti che hai presentato. Sono indicate a parte dai tuoi guadagni personali e sono incluse nel totale previsto.'}</p>
+    const reteHtml = rete.length ? `<h2 class="sezione-t rete">${princ ? 'Guadagni dai tuoi clienti' : terzi ? 'Altre entrate' : 'Guadagni dalla tua rete'}</h2><p class="sezione-s">${terzi ? 'Capitale di terzi impiegato nelle operazioni. Dal rendimento dell\'operazione si corrisponde l\'interesse concordato: la differenza è il tuo margine, indicato a parte dai tuoi guadagni personali e incluso nel totale previsto.' : princ ? 'Nelle operazioni trimestrali ai clienti spetta la loro percentuale: a te spetta il resto del ritorno, calcolato sul totale investito. Sono indicati a parte dai tuoi guadagni personali e sono inclusi nel totale previsto.' : 'Quote sugli investimenti dei clienti che hai presentato. Sono indicate a parte dai tuoi guadagni personali e sono incluse nel totale previsto.'}</p>
       <div class="kpis" data-reveal><div><span class="lbl">${terzi ? 'Capitale di terzi' : 'Investito dai tuoi clienti'}</span><b>${eur(me.totaliRete.investitoClienti)}</b></div><div><span class="lbl">${princ ? 'Tuoi guadagni previsti' : terzi ? 'Margine previsto' : 'Quote rete previste'}</span><b class="pos">+${eur(me.totaliRete.importo)}</b></div></div>
       <div class="op-grid">${titoli.map((t, i) => gruppoHtml(t, gruppi[t].filter((x) => x.cliente || x.tipo === 'rettifica'), pre + 'rl' + i)).join('')}</div>` : '';
 
@@ -298,4 +298,5 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
     const t=b.querySelector('.apri-t'); if(t)t.textContent=open?'Nascondi i dettagli':'Mostra i dettagli';
   });
 })();
+
 

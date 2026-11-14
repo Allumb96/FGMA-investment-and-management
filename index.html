@@ -17,14 +17,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Instrument+Sans:wght@400;500;600&display=swap">
-<style>html,body{margin:0;padding:0;background:#070706}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>html,body{margin:0;padding:0;background:#070706}img{max-width:100%}[hidden]{display:none!important}
+.team-layout{display:grid;grid-template-columns:1fr 1fr;gap:5cqw}.team-layout section{min-width:0}.team-layout .kick{margin-bottom:2cqh;letter-spacing:.12em}.bigl .team-layout .team{grid-template-columns:1fr;gap:2cqh}.team-layout .team i{min-width:3cqw}.pcs .team-layout{gap:2cqw}
+</style>
 <script>window.PORTALE_URL='portale.html';</script>
 </head>
 <body>
-<script src="dati.js"></script>
-<script src="viste-clienti.js?v=20261113-referenti-1"></script>
+<script src="dati.js?v=20261114-fgma"></script>
+<script src="viste-clienti.js?v=20261114-fgma"></script>
 <script src="grafici.js?v=20261112-master-g1"></script>
-<link rel="stylesheet" href="conti.css?v=20261113-referenti-1">
+<link rel="stylesheet" href="conti.css?v=20261114-fgma">
 <link rel="stylesheet" href="grafici.css?v=20261112-master-g1">
 <style>
 :root{
@@ -807,17 +809,14 @@ const T = {
     {cls:'fronte', html:`<div class="lockup"><img class="mk" src="img/fgma.png" alt="FGMA Investment and Management"></div>
       <div class="fil"></div>`},
     {html:`<div class="kick">Chi siamo</div><h3>La società al centro di tutto.</h3>
-      <p>FGMA Investment &amp; Management nasce da International Business, la nostra attività storica, e oggi ne è la casa madre: qui selezioniamo, strutturiamo e seguiamo ogni operazione che proponiamo.</p>`},
+      <p>FGMA Investment &amp; Management si occupa della gestione del capitale a lungo e breve termine. Selezioniamo, strutturiamo e seguiamo ogni operazione, con condizioni definite prima di iniziare.</p>`},
     {html:`<div class="kick">Accesso</div><h3>Opportunità riservate.</h3>
       <p>Le nostre operazioni non sono pubbliche: non si trovano su un listino né su un sito. Arrivano dalla nostra rete di relazioni e sono riservate a chi lavora con noi, direttamente o tramite un referente di fiducia.</p>`},
     {html:`<div class="kick">Tre ragioni</div><div class="trio">
       <div><b>Riservatezza</b><span>Ogni posizione resta tra noi e il cliente.</span></div>
       <div><b>Professionalità</b><span>Ogni operazione è analizzata a fondo prima di essere proposta.</span></div>
       <div><b>Regole certe</b><span>Importo, durata e rendimento messi per iscritto prima di iniziare.</span></div></div>`},
-    {html:`<div class="kick">Il nostro team</div><div class="team">
-      <div><i>MA</i><span><strong>Marco Amato</strong><em>General Manager &amp; Community Lead</em></span></div>
-      <div><i>GF</i><span><strong>Gennaro Ferrante</strong><em>Head of Fund &amp; Operations</em></span></div>
-      <div><i>AM</i><span><strong>Alfonso Milano</strong><em>Legal &amp; Compliance Coordinator</em></span></div></div>`},
+    {html:`<div class="team-layout"><section><div class="kick">Il nostro team</div><div class="team"><div><i>MA</i><span><strong>Marco Amato</strong><em>General Manager &amp; Community Lead</em></span></div><div><i>AM</i><span><strong>Alfonso Milano</strong><em>Legal &amp; Compliance Coordinator</em></span></div></div></section><section><div class="kick">I nostri referenti di fiducia</div><div class="team"><div><i aria-hidden="true">★</i><span><strong>Carlo Bontempi</strong><em>Referente ufficiale</em></span></div><div><i aria-hidden="true">★</i><span><strong>Alfonso Milano</strong><em>Referente ufficiale</em></span></div><div><i aria-hidden="true">★</i><span><strong>Giovanni Cacchio</strong><em>Referente ufficiale</em></span></div></div></section></div>`},
     {html:`<div class="kick">Il nostro obiettivo</div><p class="motto">Creare valore, avere un impatto concreto nella vita delle persone e dare speranza.</p>`},
   ],
   metodo: {titolo:'Il nostro modo di lavorare', voci:[
@@ -825,26 +824,10 @@ const T = {
     {t:'Orizzonte definito', d:'Ogni operazione ha una data di inizio e una di chiusura. Sai fin dal primo giorno quando si conclude e cosa ti aspetta.'},
     {t:'Accesso sempre aperto', d:'La tua area riservata è disponibile in qualsiasi momento. Vedi i tuoi dati, e solo i tuoi, quando vuoi.'},
   ]},
-  percorso: [
-    {t:'Un primo colloquio', d:'Ci conosciamo, capiamo cosa cerchi e ti spieghiamo come lavoriamo, senza impegno.'},
-    {t:"L'operazione di benvenuto", d:"Il primo passo è un'unica operazione a breve termine, proposta una sola volta: serve a conoscerci e a vedere il nostro metodo all'opera, con condizioni scritte fin dall'inizio."},
-    {t:'Il contratto annuale International Business', d:'Per diventare cliente effettivo si sottoscrive un contratto di dodici mesi in International Business, il nostro core business. È il periodo in cui la fiducia si consolida, da entrambe le parti.', tag:'Da 10.000 € · 12 mesi'},
-    {t:'Referente di fiducia', d:"Consolidato il rapporto, si entra tra i referenti di fiducia, riconoscibili dalla stella d'argento: a loro sono riservate le operazioni a breve termine, mensili e trimestrali.", tag:"★ Stella d'argento"},
-    {t:'Tutto sotto controllo, fino alla scadenza', d:'Dalla tua area riservata segui ogni operazione in autonomia. Alla chiusura ricevi il capitale con il rendimento concordato.'},
-  ],
+  percorso: [{"t": "Un primo colloquio", "d": "Ci conosciamo, capiamo cosa cerchi e ti spieghiamo come lavoriamo, senza impegno."}, {"t": "L'operazione di benvenuto", "d": "Il primo passo è un'unica operazione a breve termine, proposta una sola volta: serve a conoscerci e a vedere il nostro metodo all'opera, con condizioni scritte fin dall'inizio."}, {"t": "Lungo termine · Annuale e semestrale", "d": "Contratti annuali e semestrali FGMA Investment & Management. Il contratto annuale si sviluppa su 13 mesi, con agosto fermo. Importo, rendimento e scadenza sono quelli concordati nel contratto."}, {"t": "Breve termine · Trimestrale e mensile una tantum", "d": "Operazioni FGMA Investment & Management a breve termine: trimestrali oppure mensili una tantum. I nostri referenti di fiducia ufficiali sono Carlo Bontempi, Alfonso Milano e Giovanni Cacchio."}, {"t": "Tutto sotto controllo, fino alla scadenza", "d": "Dalla tua area riservata segui ogni operazione in autonomia. Alla chiusura ricevi il capitale con il rendimento concordato."}],
   termini: {
     intro:'Le regole valgono per tutti i nostri investimenti, qualunque sia la loro durata. Le trovi qui prima di iniziare e restano sempre consultabili nella tua area riservata.',
-    regole:[
-      ['Operazioni a durata definita','Lavoriamo con operazioni dalla durata stabilita fin dall\'inizio: a breve termine, mensili o trimestrali, e contratti annuali o semestrali in International Business. Importo, durata e rendimento previsto vengono concordati prima di cominciare.'],
-      ['Accesso alle operazioni','L\'accesso avviene per gradi. Ai nuovi clienti proponiamo un\'unica operazione di benvenuto a breve termine. Per diventare clienti effettivi è previsto un primo contratto annuale in International Business, con capitale minimo di 10.000 €. Le operazioni a breve termine sono riservate ai referenti di fiducia.'],
-      ['Capitale vincolato','Una volta versato il capitale, va rispettato il tempo previsto: i soldi sono vincolati fino alla data di pagamento indicata e non possono essere ritirati prima. La regola è la stessa per ogni tipo di investimento.'],
-      ['Rendimento concordato','Il rendimento è quello concordato per iscritto per ciascuna operazione. Nella tua area riservata vedi capitale, rendimento, date e guadagno previsto.'],
-      ['Pagamento a scadenza','Alla data di chiusura ricevi il capitale con il rendimento concordato. Fino a quel momento l\'operazione resta in corso e il guadagno è solo previsto.'],
-      ['Reinvestimento e aggiunte','Alla chiusura di un\'operazione puoi reinvestire capitale e guadagno in quella successiva, aggiungendo se vuoi altro capitale. Le somme reinvestite sono vincolate per tutta la durata della nuova operazione.'],
-      ['Rete e quote','Chi presenta nuovi clienti riceve la quota concordata sui loro investimenti, riconosciuta alla chiusura dell\'operazione. Le quote sono indicate a parte dai guadagni personali.'],
-      ['Accesso riservato','Ogni cliente ha credenziali personali e vede solo i propri dati. Le credenziali non vanno condivise con altri.'],
-      ['Natura delle previsioni','Gli importi e i rendimenti mostrati sono previsioni basate sugli accordi in essere tra le parti e non costituiscono garanzia di risultato.'],
-    ],
+    regole:[["Operazioni a durata definita", "La gestione FGMA Investment & Management comprende il lungo termine, con contratti annuali e semestrali, e il breve termine, con operazioni trimestrali e mensili una tantum. Il contratto annuale si sviluppa su 13 mesi, con agosto fermo. Importo, durata, rendimento previsto e date sono concordati prima di cominciare."], ["Accesso alle operazioni", "Per conoscere le operazioni disponibili e le condizioni di accesso rivolgiti al nostro team o a un referente di fiducia ufficiale. Le condizioni del singolo investimento sono definite per iscritto nel contratto."], ["Capitale vincolato", "Una volta versato il capitale, va rispettato il tempo previsto: i soldi sono vincolati fino alla data di pagamento indicata e non possono essere ritirati prima. La regola è la stessa per ogni tipo di investimento."], ["Rendimento concordato", "Il rendimento è quello concordato per iscritto per ciascuna operazione. Nella tua area riservata vedi capitale, rendimento, date e guadagno previsto."], ["Pagamento a scadenza", "Alla data di chiusura ricevi il capitale con il rendimento concordato. Fino a quel momento l'operazione resta in corso e il guadagno è solo previsto."], ["Reinvestimento e aggiunte", "Alla chiusura di un'operazione puoi reinvestire capitale e guadagno in quella successiva, aggiungendo se vuoi altro capitale. Le somme reinvestite o aggiunte sono vincolate per tutta la durata della nuova operazione."], ["Rete e quote", "Chi presenta nuovi clienti riceve la quota concordata sui loro investimenti, riconosciuta alla chiusura dell'operazione. Le quote sono indicate a parte dai guadagni personali."], ["Accesso riservato", "Ogni cliente ha credenziali personali e vede solo i propri dati. Le credenziali non vanno condivise con altri."], ["Natura delle previsioni", "Gli importi e i rendimenti mostrati sono previsioni basate sugli accordi in essere tra le parti e non costituiscono garanzia di risultato. La percentuale concordata vale solo per l'operazione a cui si riferisce: non è garantita la stessa percentuale per altre operazioni, passate o future."]],
     vigore:'In vigore dal 20 ottobre 2026'},
   contatti:{telefono:'351 691 9374', tel:'+393516919374', wa:'https://wa.me/393516919374',
     referente:'Marco Amato', ruolo:'General Manager', orari:'Lunedì – venerdì, 9:00 – 18:00',
@@ -1781,4 +1764,5 @@ else {
 
 </body>
 </html>
+
 
