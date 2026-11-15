@@ -895,7 +895,7 @@ body.home footer.site { display: none; }
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.Landing = api;
 })(typeof window !== 'undefined' ? window : globalThis);
 </script>
-<script src="dati.js?v=20261114-fgma"></script>
+<script src="dati.js?v=20261115-salvatore"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>// Scene del sito: sfondi per sezione e passaggi "cinematografici" tra le scene.
 // Le immagini stanno in media/scene/<id>-h.jpg (orizzontale) e <id>-v.jpg (verticale).
@@ -1579,7 +1579,7 @@ body.home footer.site { display: none; }
       const corpo = righe.length ? `<div class="rl-list">${righe.map((r) => `<div class="rl-row"><b class="rl-n">${esc(r.cliente)}</b><dl>
           <div><dt>${r.tipo === 'terzi' ? 'Capitale' : 'Investito'}</dt><dd>${eur(r.investitoCliente)}</dd></div>
           <div><dt>${r.tipo === 'terzi' ? 'Interesse dovuto' : 'Ritorno cliente'}</dt><dd>${pctF(r.clientePct)}${r.tipo === 'terzi' ? ` <small>(${eur(Math.round(r.investitoCliente * r.clientePct) / 100)})</small>` : ''}</dd></div>
-          <div><dt>${r.tipo === 'terzi' ? 'Tuo margine' : 'Tuo ritorno'}</dt><dd>${pctF(r.quotaPct)}</dd></div>
+          <div><dt>${r.tipo === 'terzi' ? 'Tuo margine' : 'Tuo ritorno'}</dt><dd>${pctF(r.quotaPct)}${r.baseQuota === 'guadagno' ? ' sul guadagno del cliente' : ''}</dd></div>
           <div><dt>Tuo guadagno</dt><dd class="pos">+${eur(r.importo)}</dd></div></dl></div>`).join('')}</div>${rettHtml}`
         : `<p class="rl-vuoto">Su questo investimento non ci sono clienti portati da te, quindi non c'è nessun guadagno da clienti.</p>`;
       return `<article class="op acc rl" data-reveal>

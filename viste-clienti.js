@@ -133,7 +133,7 @@
       const corpo = righe.length ? `<div class="rl-list">${righe.map((r) => `<div class="rl-row"><b class="rl-n">${esc(r.cliente)}</b><dl>
           <div><dt>${r.tipo === 'terzi' ? 'Capitale' : 'Investito'}</dt><dd>${eur(r.investitoCliente)}</dd></div>
           <div><dt>${r.tipo === 'terzi' ? 'Interesse dovuto' : 'Ritorno cliente'}</dt><dd>${pctF(r.clientePct)}${r.tipo === 'terzi' ? ` <small>(${eur(Math.round(r.investitoCliente * r.clientePct) / 100)})</small>` : ''}</dd></div>
-          <div><dt>${r.tipo === 'terzi' ? 'Tuo margine' : 'Tuo ritorno'}</dt><dd>${pctF(r.quotaPct)}</dd></div>
+          <div><dt>${r.tipo === 'terzi' ? 'Tuo margine' : 'Tuo ritorno'}</dt><dd>${pctF(r.quotaPct)}${r.baseQuota === 'guadagno' ? ' sul guadagno del cliente' : ''}</dd></div>
           <div><dt>Tuo guadagno</dt><dd class="pos">+${eur(r.importo)}</dd></div></dl></div>`).join('')}</div>${rettHtml}`
         : `<p class="rl-vuoto">Su questo investimento non ci sono clienti portati da te, quindi non c'è nessun guadagno da clienti.</p>`;
       return `<article class="op acc rl" data-reveal>
@@ -233,7 +233,7 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
       <p>Ogni cliente è contato una sola volta per referente, anche con più operazioni. I guadagni sono quelli previsti dalle quote registrate, non attestano pagamenti già ricevuti. Esclusi investimenti personali e margini sul capitale di terzi.</p>
       ${refs.length ? refs.map(r=>`<details><summary><span class="riepilogo-titolo">${esc(r.nome)}</span><span class="riepilogo-dettagli">${r.clienti.length} ${r.clienti.length===1?'cliente portato':'clienti portati'} · Guadagno previsto <span class="pos">${cash(r.totale)}</span></span><span class="riepilogo-invito">Vedi clienti e quote</span></summary>
         ${r.clienti.map(c=>`<details><summary><span class="riepilogo-titolo">${esc(c.nome)}</span><span class="riepilogo-dettagli">Guadagno previsto per il referente: <span class="pos">${cash(c.centesimi)}</span></span></summary>
-          ${c.righe.length ? `<div class="tab-scroll"><table><thead><tr><th>Operazione</th><th>Scadenza</th><th>Quota referente</th><th>Guadagno previsto</th></tr></thead><tbody>${c.righe.map(o=>`<tr><td>${esc(o.titolo||'—')}</td><td>${o.fine?dataIt(o.fine):'—'}</td><td>${o.quotaPct!=null?esc(o.quotaPct)+'%':'—'}</td><td class="pos">${eur(o.importo||0)}</td></tr>`).join('')}</tbody></table></div>` : '<p>Nessuna quota di guadagno registrata per questo cliente.</p>'}</details>`).join('') || '<p>Nessun cliente associato.</p>'}
+          ${c.righe.length ? `<div class="tab-scroll"><table><thead><tr><th>Operazione</th><th>Scadenza</th><th>Quota referente</th><th>Guadagno previsto</th></tr></thead><tbody>${c.righe.map(o=>`<tr><td>${esc(o.titolo||'—')}</td><td>${o.fine?dataIt(o.fine):'—'}</td><td>${o.quotaPct!=null?esc(o.quotaPct)+'%'+(o.baseQuota==='guadagno'?' sul guadagno del cliente':''):'—'}</td><td class="pos">${eur(o.importo||0)}</td></tr>`).join('')}</tbody></table></div>` : '<p>Nessuna quota di guadagno registrata per questo cliente.</p>'}</details>`).join('') || '<p>Nessun cliente associato.</p>'}
         ${r.rettifiche.length?`<div class="rettifiche-referenti"><p>Quote clienti: ${cash(r.lordo)}</p>${r.rettifiche.map(x=>`<p>${esc(x.etichetta||'Rettifica')} · ${esc(x.titolo||'')}: ${eur(x.importo||0)}</p>`).join('')}<p>Guadagno previsto dopo le rettifiche: <b class="pos">${cash(r.totale)}</b></p></div>`:''}</details>`).join('') : '<p>Nessun referente registrato.</p>'}</details>`;
   }
 
