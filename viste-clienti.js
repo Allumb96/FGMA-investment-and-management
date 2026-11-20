@@ -265,9 +265,15 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
         `${eur(righe.reduce((s,r)=>s+r.o.investito,0))} impiegati · ${dataIt(o.inizio)} → ${dataIt(o.fine)}<span class="totale-clienti">Da dare ai clienti a scadenza: <strong>${eur(righe.reduce((s,r)=>s+Math.round(r.o.totaleAllaFine*100),0)/100)}</strong> <small>(capitale + guadagni previsti)</small></span>`,
         `<div class="kpis"><div><span class="lbl">Capitale da restituire</span><b>${eur(righe.reduce((s,r)=>s+Math.round(r.o.investito*100),0)/100)}</b></div><div><span class="lbl">Guadagni previsti da riconoscere</span><b class="pos">${eur(righe.reduce((s,r)=>s+Math.round(r.o.guadagnoPrevisto*100),0)/100)}</b></div></div><p>Clienti ordinati per capitale nell'operazione, dal più alto al più basso.</p>`+
         righe.sort((a,b)=>b.o.investito-a.o.investito||a.nome.localeCompare(b.nome,'it')).map(r=>riga(r.nome,`${eur(r.o.investito)} nell'operazione`,dettaglio(r.o))).join(''))).join('')}`;
+    // Credentials already supplied by the encrypted master account; never rendered in client views.
+    const accessoCliente = c => `<section class="accesso-cliente" aria-label="Dati di accesso di ${esc(c.nome)}">
+      <h4>Dati di accesso</h4>
+      <p>Nome utente: <code style="overflow-wrap:anywhere;user-select:all">${esc(c.username || '')}</code></p>
+      ${c.password ? `<details><summary>Mostra password</summary><p><code style="overflow-wrap:anywhere;user-select:all">${esc(c.password)}</code></p></details>` : '<p>Password non disponibile nel profilo master.</p>'}
+    </section>`;
     const tuttiIClienti = `<h3>Scheda di ogni cliente · ${clienti.length}</h3>
       ${clienti.map(({c})=>riga(c.nome,`${eur(capitale(c))} complessivi nelle operazioni · ${c.operazioni.length} operazioni`,
-        c.operazioni.slice().sort(perLettura).map(o=>riga(o.titolo,`${eur(o.investito)} nell'operazione`,dettaglio(o))).join('')||'<p>Nessuna operazione registrata.</p>')).join('')}`;
+        accessoCliente(c) + (c.operazioni.slice().sort(perLettura).map(o=>riga(o.titolo,`${eur(o.investito)} nell'operazione`,dettaglio(o))).join('')||'<p>Nessuna operazione registrata.</p>'))).join('')}`;
     // le due schermate della sala mostrano due tagli diversi degli stessi dati
     const corpo = parte === 'clienti' ? referentiHtml(me) + tuttiIClienti
       : parte === 'investimenti' ? perInvestimento + catalogoHtml(me)
@@ -298,5 +304,6 @@ const stella = livello => `<span>${esc(({oro:'Decisionale',argento:'Referente di
     const t=b.querySelector('.apri-t'); if(t)t.textContent=open?'Nascondi i dettagli':'Mostra i dettagli';
   });
 })();
+
 
 
